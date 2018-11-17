@@ -1,17 +1,18 @@
+import javax.sound.sampled.Line;
 import java.util.ArrayList;
 
 class VendingMachine {
 	private CoinSet coins;
-    private double balance;
 	private CoinSet currentCoins;
-    private ArrayList<Product> products;
+    //private ArrayList<Product> products;
+    private ArrayList<LineItem> products;
 
     /**
      * Constructs the vending machine and initialises the list of products
 	 * and the set of coins
      */
     public VendingMachine(){
-        products = new ArrayList<Product>();
+        products = new ArrayList<LineItem>();
 		coins = new CoinSet();
 		currentCoins = new CoinSet();
     }
@@ -73,8 +74,8 @@ class VendingMachine {
      * @param quantity Quantity of said product
      */
     public void addProduct(Product newProduct, int quantity){
-        for(int i = 0; i < quantity; i++)
-            products.add(newProduct);
+		LineItem item = new LineItem(newProduct, quantity);
+		products.add(item);
     }
 
 }
