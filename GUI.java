@@ -1,9 +1,11 @@
 import javafx.application.Application;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -31,7 +33,7 @@ public class GUI extends Application {
      */
     private void display(BorderPane pane){
         stage.close();
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("stage_vend_icon.png")));
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("images/stage_vend_icon.png")));
         stage.setMinHeight(150);
         stage.setMinWidth(350);
         Scene scene = new Scene(pane);
@@ -113,15 +115,25 @@ public class GUI extends Application {
         pane.setHgap(5);
         pane.setAlignment(Pos.CENTER);
 
-        Label message = new Label("What would you like to do?\n");
+        ToolBar bar = new ToolBar();
+        Image gear = new Image(getClass().getResourceAsStream("images/gear.png"));
+        Button admin = new Button("Login", new ImageView(gear));
+        admin.setOnAction(event -> adminLogin());
+        bar.getItems().add(admin);
 
-        Button display = new Button("Show Products");
+        Label message = new Label("What would you like to do?\n");
+        message.setStyle("-fx-font-size: 2em; ");
+
+        Image bottle = new Image((getClass().getResourceAsStream("images/showIcon.png")));
+        Button display = new Button("", new ImageView(bottle));
         display.setOnAction(event -> { });
 
-        Button insert = new Button("Insert Coin");
-        insert.setOnAction(event -> { });
+        Image coin = new Image((getClass().getResourceAsStream("images/coinIcon.png")));
+        Button insert = new Button("", new ImageView(coin));
+        insert.setOnAction(event -> chooseCoin());
 
-        Button buy = new Button("Buy");
+        Image cart = new Image((getClass().getResourceAsStream("images/buyIcon.png")));
+        Button buy = new Button("", new ImageView(cart));
         buy.setOnAction(event -> { });
 
         pane.add(message, 0, 0, 3, 1);
@@ -129,7 +141,10 @@ public class GUI extends Application {
         pane.add(insert, 1, 2);
         pane.add(buy, 2, 2);
 
-        BorderPane show = new BorderPane(pane);
+        BorderPane show = new BorderPane();
+        show.setTop(bar);
+        show.setCenter(pane);
+
         display(show);
     }
 
@@ -146,7 +161,7 @@ public class GUI extends Application {
         Label message = new Label("What would you like to do?");
 
         Button create = new Button("Create Account");
-        create.setOnAction(event -> { });
+        create.setOnAction(event -> createAccount());
 
         Button add = new Button("Add Product");
         add.setOnAction(event -> addProduct());
@@ -209,16 +224,84 @@ public class GUI extends Application {
         BorderPane show = new BorderPane(pane);
         display(show);
     }
-    
+
     private void chooseCoin(){
         GridPane pane = new GridPane();
         pane.setPadding(new Insets(10, 10, 10, 10));
         pane.setVgap(5);
         pane.setHgap(5);
         pane.setAlignment(Pos.CENTER);
-        
-        Button five = new Button();
-        Button ten = new Button();
+
+        Image cent5 = new Image(getClass().getResourceAsStream("images/5cent.png"));
+        Image cent10 = new Image(getClass().getResourceAsStream("images/cent10.png"));
+        Image cent20 = new Image(getClass().getResourceAsStream("images/cent20.png"));
+        Image cent50 = new Image(getClass().getResourceAsStream("images/cent50.png"));
+        Image euro1 = new Image(getClass().getResourceAsStream("images/euro.png"));
+        Image euro2 = new Image(getClass().getResourceAsStream("images/euro2.png"));
+
+        Button five = new Button("", new ImageView(cent5));
+        five.setOnAction(event -> System.out.println("5 cent"));
+        Button ten = new Button("", new ImageView(cent10));
+        ten.setOnAction(event -> System.out.println("10 cent"));
+        Button twenty = new Button("", new ImageView(cent20));
+        twenty.setOnAction(event -> System.out.println("20 cent"));
+        Button fifty = new Button("", new ImageView(cent50));
+        fifty.setOnAction(event -> System.out.println("50 cent"));
+        Button euro = new Button("", new ImageView(euro1));
+        euro.setOnAction(event -> System.out.println("1 euro"));
+        Button twoEuro = new Button("", new ImageView(euro2));
+        twoEuro.setOnAction(event -> System.out.println("2 euro"));
+
+        Image backArrow = new Image(getClass().getResourceAsStream("images/backArrow.png"));
+        Button back = new Button("", new ImageView(backArrow));
+        back.setOnAction(event -> userMenu());
+
+        pane.add(five, 0,0);
+        pane.add(ten, 1, 0);
+        pane.add(twenty, 2, 0);
+        pane.add(fifty, 0,1);
+        pane.add(euro, 1, 1);
+        pane.add(twoEuro, 2, 1);
+        pane.add(back, 0,2);
+
+        BorderPane show = new BorderPane(pane);
+        display(show);
+    }
+
+    private void createAccount(){
+        GridPane pane = new GridPane();
+        pane.setPadding(new Insets(10, 10, 10, 10));
+        pane.setVgap(5);
+        pane.setHgap(5);
+        pane.setAlignment(Pos.CENTER);
+
+        Label email = new Label("Email");
+        Label pass  = new Label("Password");
+        Label check = new Label("Confirm Password");
+
+        TextField emailField = new TextField();
+        PasswordField passField = new PasswordField();
+        PasswordField verify = new PasswordField();
+
+        Button submit = new Button("Submit");
+        submit.setOnAction(event -> {  });
+
+        Button clear  = new Button("Clear");
+        clear.setOnAction(event -> createAccount());
+
+        pane.add(email, 0, 0);
+        pane.add(emailField, 1, 0, 2, 1);
+        pane.add(pass, 0, 1);
+        pane.add(passField, 1, 1, 2, 1);
+        pane.add(check,0,2);
+        pane.add(verify, 1, 2, 2, 1);
+        pane.add(submit, 0, 3);
+        pane.add(clear, 2, 3);
+
+        GridPane.setHalignment(clear, HPos.RIGHT);
+
+        BorderPane show = new BorderPane(pane);
+        display(show);
     }
 
     /**
