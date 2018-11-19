@@ -4,7 +4,6 @@ import java.util.ArrayList;
 class VendingMachine {
 	private CoinSet coins;
 	private CoinSet currentCoins;
-    //private ArrayList<Product> products;
     private ArrayList<LineItem> products;
 
     /**
@@ -17,6 +16,20 @@ class VendingMachine {
 		currentCoins = new CoinSet();
     }
 
+	/**
+     * Returns a list of all the product choices available from the machine with price, containing each
+     * product only once. 
+     * @return String
+     */
+	public String showProducts(){
+		Product[] productList = getProductTypes();
+		String output = "";
+		for (Product p : productList)
+			output += p.getDescription() + ", " + p.getPrice() + "\n";
+		
+		return output;
+	}
+	
     /**
      * Returns a list of all the product choices available from the machine, containing each
      * product only once. (I'm proud of this one)
@@ -24,9 +37,9 @@ class VendingMachine {
      */
     public Product[] getProductTypes(){
         ArrayList<Product> distinctProducts = new ArrayList<Product>();
-        for(Product currentItem : products){
-            if(!distinctProducts.contains(currentItem)) {
-                distinctProducts.add(currentItem);
+        for(LineItem currentItem : products){
+            if(!distinctProducts.contains(currentItem.getProduct())) {
+                distinctProducts.add(currentItem.getProduct());
             }
         }
         Product[] outputProducts = new Product[distinctProducts.size()];
@@ -61,7 +74,10 @@ class VendingMachine {
     public void buyProduct(Product p) throws VendingException{
 		double currentCredit = currentCoins.getValue();
         if(currentCredit >= p.getPrice()) {
-            products.remove(p);
+            if()
+			
+			
+			products.remove(p);
 			coins.addSetOfCoins(currentCoins.getSetOfCoins());
 			currentCoins.clearCoinSet();
         }else

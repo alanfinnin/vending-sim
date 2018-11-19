@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class CoinSet
 {  
    private ArrayList<Coin> set;
-
+   
    /**
     *  	Constructs a CoinSet object.
 	*	Initialises the ArrayList

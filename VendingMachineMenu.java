@@ -29,11 +29,7 @@ public class VendingMachineMenu {
             System.out.println("S)how products I)nsert coin B)uy A)dd product R)emove coins Q)uit ");
             String command = in.nextLine().toUpperCase();
             if (command.equals("S")) {
-                /*getProductTypes() returns an array of products that doesn't
-                contain duplicates
-                */
-                for (Product p : machine.getProductTypes())
-                    System.out.println(p);
+                System.out.println(machine.showProducts());
             } else if (command.equals("I")) { //allows one coin be inserted at a time
                 machine.addCoin((Coin) getChoice(coins));
             } else if (command.equals("R")) {

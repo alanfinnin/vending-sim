@@ -18,6 +18,15 @@ public class LineItem {
     public void setQuantity(int quantity){
         this.quantity = quantity;
     }
+	
+	public boolean decrementQuantity(){
+		if(quantity >= 1)
+			this.quantity--;
+		else
+			return false;
+			
+		return true;
+	}
 
     @Override
     public String toString(){
