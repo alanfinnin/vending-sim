@@ -64,10 +64,10 @@ public class FileReading
 		}
 		//return set;
 	}
-	public ArrayList readFromAdminFile() throws IOException
+	public ArrayList readFromOperatorsFile() throws IOException
 	{
-		ArrayList<String> admins = new ArrayList<String>();
-		File stockFile = new File("Admin.txt");
+		ArrayList<String> operators = new ArrayList<String>();
+		File stockFile = new File("Operators.txt");
 		Scanner in = new Scanner(stockFile);
 		
 		try
@@ -83,8 +83,8 @@ public class FileReading
 		}
 		catch(Exception e)
 		{
-			System.out.println("Error: parsing error in Admin file");
+			System.out.println("Error: parsing error in Operators file");
 		}
-		return admins;
+		return operators;
 	}
 }
