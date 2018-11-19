@@ -74,8 +74,8 @@ class VendingMachine {
     public void buyProduct(Product p) throws VendingException{
 		double currentCredit = currentCoins.getValue();
         if(currentCredit >= p.getPrice()) {
-            if()
-			
+            
+			//todo: make this work
 			
 			products.remove(p);
 			coins.addSetOfCoins(currentCoins.getSetOfCoins());
