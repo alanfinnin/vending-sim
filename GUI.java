@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 public class GUI extends Application {
 
     private Stage stage = new Stage();
+    private boolean isAdmin = false;
 
     /**
      * The run() method initializes the GUI methods
@@ -23,7 +24,7 @@ public class GUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        accountChoice();
+        userMenu();
     }
 
     /**
@@ -41,34 +42,6 @@ public class GUI extends Application {
         stage.setTitle("Vending Machine Simulation");
         stage.show();
     }
-
-    /**
-     * This method makes a GridPane with options for accessing the admin options or the normal user
-     * options then initializes the adminLogin() method of the ... method depending on the button
-     * chosen. It passes the filled GridPane to the display() method.
-     */
-    private void accountChoice(){
-        GridPane pane = new GridPane();
-        pane.setPadding(new Insets(10, 10, 10, 10));
-        pane.setVgap(5);
-        pane.setHgap(5);
-        pane.setAlignment(Pos.CENTER);
-
-        Label loginChoice = new Label("What account would you like to use?\n\n");
-        Button admin = new Button("Admin");
-        admin.setTooltip(new Tooltip("Login as admin"));
-        admin.setOnAction(event -> adminLogin());
-
-        Button user = new Button("User");
-        user.setTooltip(new Tooltip("Continue on as user"));
-        user.setOnAction(event -> userMenu());
-
-        pane.add(loginChoice, 0, 0, 2 ,1);
-        pane.add(admin, 0, 1);
-        pane.add(user, 1, 1);
-
-        BorderPane show = new BorderPane(pane);
-        display(show);    }
 
     /**
      * The adminLogin() method makes and fills in a GridPane with a password field and an email
@@ -89,17 +62,25 @@ public class GUI extends Application {
         PasswordField passField = new PasswordField();
 
         Button submit = new Button("Submit");
-        submit.setOnAction(event -> { adminMenu(); });
+        submit.setOnAction(event -> {isAdmin = true; userMenu();});
 
         Button clear  = new Button("Clear");
         clear.setOnAction(event -> adminLogin());
+
+        Image backArrow = new Image(getClass().getResourceAsStream("images/backArrow.png"));
+        Button back = new Button("", new ImageView(backArrow));
+        back.setOnAction(event -> userMenu());
 
         pane.add(email, 0, 0);
         pane.add(emailField, 1, 0, 2, 1);
         pane.add(pass, 0, 1);
         pane.add(passField, 1, 1, 2, 1);
-        pane.add(submit, 0, 2);
+        pane.add(submit, 2, 2);
         pane.add(clear, 1, 2);
+        pane.add(back, 0, 2);
+
+        GridPane.setHalignment(submit, HPos.RIGHT);
+        GridPane.setHalignment(back, HPos.RIGHT);
 
         BorderPane show = new BorderPane(pane);
         display(show);
@@ -121,60 +102,60 @@ public class GUI extends Application {
         admin.setOnAction(event -> adminLogin());
         bar.getItems().add(admin);
 
+        if (isAdmin){
+            Button create = new Button("Create Account");
+            create.setOnAction(event -> createAccount());
+
+            Button add = new Button("Add Product");
+            add.setOnAction(event -> addProduct());
+
+            Button remove = new Button("Remove Money");
+            remove.setOnAction(event -> {});
+
+
+            admin.setText("Logout");
+            admin.cancelButtonProperty();
+            admin.setOnAction(event -> {isAdmin = false; userMenu();});
+
+            bar.getItems().add(create);
+            bar.getItems().add(add);
+            bar.getItems().add(remove);
+        }
+
         Label message = new Label("What would you like to do?\n");
         message.setStyle("-fx-font-size: 2em; ");
 
         Image bottle = new Image((getClass().getResourceAsStream("images/showIcon.png")));
         Button display = new Button("", new ImageView(bottle));
         display.setOnAction(event -> { });
+        Label showProducts = new Label("Show Products");
 
         Image coin = new Image((getClass().getResourceAsStream("images/coinIcon.png")));
         Button insert = new Button("", new ImageView(coin));
         insert.setOnAction(event -> chooseCoin());
+        Label addCoin = new Label("Insert Coin");
 
         Image cart = new Image((getClass().getResourceAsStream("images/buyIcon.png")));
         Button buy = new Button("", new ImageView(cart));
         buy.setOnAction(event -> { });
+        Label buyProduct = new Label("Buy");
 
         pane.add(message, 0, 0, 3, 1);
         pane.add(display, 0, 2);
         pane.add(insert, 1, 2);
         pane.add(buy, 2, 2);
+        pane.add(showProducts, 0, 3);
+        pane.add(addCoin, 1, 3);
+        pane.add(buyProduct, 2, 3);
+
+        GridPane.setHalignment(showProducts, HPos.CENTER);
+        GridPane.setHalignment(addCoin, HPos.CENTER);
+        GridPane.setHalignment(buyProduct, HPos.CENTER);
 
         BorderPane show = new BorderPane();
         show.setTop(bar);
         show.setCenter(pane);
 
-        display(show);
-    }
-
-    /**
-     *
-     */
-    private void adminMenu(){
-        GridPane pane = new GridPane();
-        pane.setPadding(new Insets(10, 10, 10, 10));
-        pane.setVgap(5);
-        pane.setHgap(5);
-        pane.setAlignment(Pos.CENTER);
-
-        Label message = new Label("What would you like to do?");
-
-        Button create = new Button("Create Account");
-        create.setOnAction(event -> createAccount());
-
-        Button add = new Button("Add Product");
-        add.setOnAction(event -> addProduct());
-
-        Button remove = new Button("Remove Money");
-        remove.setOnAction(event -> {});
-
-        pane.add(message, 0,0,3,1);
-        pane.add(create, 0,1);
-        pane.add(add, 1,1);
-        pane.add(remove, 2, 1);
-
-        BorderPane show = new BorderPane(pane);
         display(show);
     }
 
@@ -210,7 +191,7 @@ public class GUI extends Application {
 
         Button cancel = new Button("Cancel");
         cancel.setAlignment(Pos.BOTTOM_RIGHT);
-        cancel.setOnAction(event -> adminMenu());
+        cancel.setOnAction(event -> userMenu());
 
         pane.add(text1, 0,0);
         pane.add(text2, 0,1);
