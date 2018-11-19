@@ -14,6 +14,7 @@ public class GUI extends Application {
 
     private Stage stage = new Stage();
     private boolean isAdmin = false;
+    private boolean isCreate = false;
 
     /**
      * The run() method initializes the GUI methods
@@ -71,13 +72,22 @@ public class GUI extends Application {
         Button back = new Button("", new ImageView(backArrow));
         back.setOnAction(event -> userMenu());
 
+        if (isCreate){
+            Label check = new Label("Confirm Password");
+            PasswordField verify = new PasswordField();
+
+            pane.add(check, 0, 2);
+            pane.add(verify, 1, 2, 2, 1);
+            isCreate = false;
+        }
+
         pane.add(email, 0, 0);
         pane.add(emailField, 1, 0, 2, 1);
         pane.add(pass, 0, 1);
         pane.add(passField, 1, 1, 2, 1);
-        pane.add(submit, 2, 2);
-        pane.add(clear, 1, 2);
-        pane.add(back, 0, 2);
+        pane.add(submit, 2, 3);
+        pane.add(clear, 1, 3);
+        pane.add(back, 0, 3);
 
         GridPane.setHalignment(submit, HPos.RIGHT);
         GridPane.setHalignment(back, HPos.RIGHT);
@@ -104,7 +114,7 @@ public class GUI extends Application {
 
         if (isAdmin){
             Button create = new Button("Create Account");
-            create.setOnAction(event -> createAccount());
+            create.setOnAction(event -> {isCreate = true; adminLogin();});
 
             Button add = new Button("Add Product");
             add.setOnAction(event -> addProduct());
@@ -249,41 +259,6 @@ public class GUI extends Application {
         display(show);
     }
 
-    private void createAccount(){
-        GridPane pane = new GridPane();
-        pane.setPadding(new Insets(10, 10, 10, 10));
-        pane.setVgap(5);
-        pane.setHgap(5);
-        pane.setAlignment(Pos.CENTER);
-
-        Label email = new Label("Email");
-        Label pass  = new Label("Password");
-        Label check = new Label("Confirm Password");
-
-        TextField emailField = new TextField();
-        PasswordField passField = new PasswordField();
-        PasswordField verify = new PasswordField();
-
-        Button submit = new Button("Submit");
-        submit.setOnAction(event -> {  });
-
-        Button clear  = new Button("Clear");
-        clear.setOnAction(event -> createAccount());
-
-        pane.add(email, 0, 0);
-        pane.add(emailField, 1, 0, 2, 1);
-        pane.add(pass, 0, 1);
-        pane.add(passField, 1, 1, 2, 1);
-        pane.add(check,0,2);
-        pane.add(verify, 1, 2, 2, 1);
-        pane.add(submit, 0, 3);
-        pane.add(clear, 2, 3);
-
-        GridPane.setHalignment(clear, HPos.RIGHT);
-
-        BorderPane show = new BorderPane(pane);
-        display(show);
-    }
 
     /**
      *
