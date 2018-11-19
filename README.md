@@ -1,2 +1,2 @@
 # vending-sim
-Vending machine simulation project for CS4013
+IO for project
