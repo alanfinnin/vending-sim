@@ -78,7 +78,7 @@ public class FileReading
 				username = lines[0];
 				password = lines[1];
 				userTypeCode = lines[2];
-				admins.add(username + "," + password + "," + userTypeCode);
+				operators.add(username + "," + password + "," + userTypeCode);
 			}
 		}
 		catch(Exception e)
