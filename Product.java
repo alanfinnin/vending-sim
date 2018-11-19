@@ -27,6 +27,6 @@ public class Product {
     }
 
     public String toString(){
-        return description;
+        return description + ", " + price;
     }
 }
