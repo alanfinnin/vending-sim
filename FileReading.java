@@ -77,8 +77,7 @@ public class FileReading
 				lines = in.nextLine().split(",");
 				username = lines[0];
 				password = lines[1];
-				userTypeCode = lines[2];
-				operators.add(username + "," + password + "," + userTypeCode);
+				operators.add(username + "," + password);
 			}
 		}
 		catch(Exception e)
