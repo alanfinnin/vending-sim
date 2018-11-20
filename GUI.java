@@ -1,4 +1,5 @@
 import javafx.application.Application;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -22,7 +23,7 @@ public class GUI extends Application {
     private boolean isAdding = false;
 
     //****TEMP****
-    private ArrayList<Product> products = new ArrayList<>();
+    private ArrayList<LineItem> products = new ArrayList<>();
 
     /**
      * The run() method initializes the GUI methods
@@ -33,8 +34,9 @@ public class GUI extends Application {
 
     @Override
     public void start(Stage primaryStage){
-        products.add(new Product("Fanta Zero", 1.75));
-        products.add(new Product("Coke", 1.99));
+        products.add(new LineItem((new Product("Fanta Zero", 1.75)), 10));
+        products.add(new LineItem((new Product("Coke", 1.99)), 5));
+
         userMenu();}
 
     /**
@@ -227,25 +229,27 @@ public class GUI extends Application {
         pane.setVgap(5);
         pane.setHgap(5);
         pane.setAlignment(Pos.CENTER);
+        BorderPane show = new BorderPane();
 
-        TableView<Product> table = new TableView<>();
-        table.setEditable(true);
+        TableView<LineItem> table = new TableView<>();
 
-        TableColumn<Product, String> nameCol = new TableColumn<>("Name");
-        TableColumn<Product, Double> priceCol= new TableColumn<>("Price");
-        TableColumn<Product, Integer>quantCol= new TableColumn<>("Quantity");
+        TableColumn<LineItem, String> nameCol = new TableColumn<>("Name");
+        TableColumn<LineItem, Double> priceCol= new TableColumn<>("Price");
+        TableColumn<LineItem, Integer>quantCol= new TableColumn<>("Quantity");
         nameCol.setMinWidth(175);
         priceCol.setMinWidth(100);
         quantCol.setMinWidth(100);
 
-        table.getColumns().addAll(nameCol, priceCol, quantCol);
-
-        nameCol.setCellValueFactory(new PropertyValueFactory<>("description"));
-        priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
+        nameCol.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getProduct().getDescription()));
+        priceCol.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getProduct().getPrice()));
         quantCol.setCellValueFactory(new PropertyValueFactory<>("Quantity"));
 
-        ObservableList<Product> list = FXCollections.observableArrayList(products);
+        ObservableList<LineItem> list = FXCollections.observableList(products);
         table.setItems(list);
+
+        table.getColumns().addAll(nameCol, priceCol, quantCol);
 
         if (isAdding){
             Label text1 = new Label("Description");
@@ -262,7 +266,7 @@ public class GUI extends Application {
                     String desc = field1.getText();
                     double price = Double.parseDouble(field2.getText());
                     int quantity = Integer.parseInt(field3.getText());
-                    products.add(new Product(desc, price));
+                    products.add(new LineItem(new Product(desc, price), quantity));
                     showProducts();
                 } catch (Exception e){
                     error("Invalid input detected!");
@@ -288,7 +292,6 @@ public class GUI extends Application {
         pane.add(back, 0, 3);
         GridPane.setHalignment(back, HPos.LEFT);
 
-        BorderPane show = new BorderPane();
         show.setTop(table);
         show.setCenter(pane);
         display(show);
