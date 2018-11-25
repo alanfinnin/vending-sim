@@ -5,31 +5,60 @@ import java.util.ArrayList;
 */
 public class CoinSet
 {  
-   private ArrayList<Coin> set;
-   
+   private ArrayList<CoinLine> set;
+
    /**
     *  	Constructs a CoinSet object.
 	*	Initialises the ArrayList
    */
    public CoinSet()
-   {  
-      set = new ArrayList<Coin>();
+   {
+      set = new ArrayList<>();
+      set.add(new CoinLine(0.05, "5 Cent", 0));
+      set.add(new CoinLine(0.10, "10 Cent", 0));
+      set.add(new CoinLine(0.20, "20 Cent", 0));
+      set.add(new CoinLine(0.50, "50 Cent", 0));
+      set.add(new CoinLine(1.00, "1 Euro", 0));
+      set.add(new CoinLine(2.00, "2 Euro", 0));
    }
+
+
    
    /**
 	*	Adds a coin to the set of coins
 	*	@param coin
    */
    public void addCoin(Coin coin){
-	   set.add(coin);
+   		for(CoinLine cl : set){
+   			if(coin.equals(cl.getCoin())){
+   				cl.addQuantity(1);
+   				break;
+			}
+		}
    }
-   
-   public ArrayList<Coin> getSetOfCoins(){
+
+	/**
+	 * Returns the Coinset
+	 * @return Set of Coin Lines
+	 */
+	public ArrayList<CoinLine> getSetOfCoins(){
 	   return set;
    }
-   
-   public void addSetOfCoins(ArrayList<Coin> cs){
-	   set.addAll(cs);
+
+	/**
+	 * Adds one coinset to another by checking for coins in common and adding the
+	 * quantity of the coins in the passed in coinset to the quantity in the current coinset
+	 * @param inputCoinLineList An ArrayList of CoinLine
+	 */
+   public void addSetOfCoins(ArrayList<CoinLine> inputCoinLineList){
+   		for(CoinLine inputCoinLine : inputCoinLineList){
+   			for(CoinLine setCoinLine : set) {
+				if(inputCoinLine.equals(setCoinLine)) {
+					setCoinLine.addQuantity(inputCoinLine.getQuantity());
+					break; //only breaks from the innermost loop thank god
+				}
+			}
+		}
    }
    
    /**
@@ -38,8 +67,8 @@ public class CoinSet
    */
    public double getValue(){
 	   double value = 0;
-	   for(Coin coin : set){
-		   value += coin.getValue();
+	   for(CoinLine cl : set){
+		   value += cl.getTotalValue();
 	   }
 	   return value;
    }
@@ -49,5 +78,14 @@ public class CoinSet
    */
    public void clearCoinSet(){
 	   set.clear();
+   }
+
+   @Override
+   public String toString(){
+   		String output = "";
+	   	for(CoinLine cl : set){
+		   	output += cl.toString() + ",\n";
+	   	}
+	   	return output;
    }
 }
