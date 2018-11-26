@@ -1,9 +1,15 @@
 import java.util.*;
 import java.io.*;
-public class FileWriting
+public class FileWriting extends FileIO
 {
 	private String line;
-	public void fromArrayListToFiles(ArrayList<LineItem> stock, ArrayList<CoinSet> money, ArrayList<String> operators) throws IOException
+	private ArrayList<CoinLine> moneySet;
+	/**
+	*	The main and only public method avaliable
+	*	this uses the other private methods to
+	*	carry out the saving
+	*/
+	public void fromArrayListToFiles(ArrayList<LineItem> stock, CoinSet money, ArrayList<String> operators) throws IOException
 	{
 		stockToFile(stock);
 		moneyToFile(money);
@@ -14,16 +20,18 @@ public class FileWriting
 		File stockFile = new File("Stock.txt");
 		FileWriter writer = new FileWriter(stockFile, true);
 		for(int i = 0; i < stock.size(); i++)
-			writer.write(stock.get(i).getProduct().getDescription() + "," + stock.get(i).getProduct().getPrice() + "," + stock.get(i).getQuantity());
+			writer.write(stock.get(i).toString());
 		writer.flush();
 		writer.close();
 	}
-	private void moneyToFile(ArrayList<CoinSet> money) throws IOException
+	private void moneyToFile(CoinSet money) throws IOException
 	{
+		moneySet = new ArrayList<CoinLine>();
+		moneySet = money.getSetOfCoins();
 		File moneyFile = new File("Money.txt");
 		FileWriter writer = new FileWriter(moneyFile);
-		for(int i = 0; i < money.size(); i++)
-			//writer.write();
+		for(int i = 0; i < moneySet.size(); i++)
+			writer.write(moneySet.get(i).toString());
 		writer.flush();
 		writer.close();
 	}
