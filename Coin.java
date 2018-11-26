@@ -24,6 +24,23 @@ public class Coin {
     }
 
 	/**
+	 *	Returns the value of the coin
+	 *	@return value
+	 */
+	String getName(){
+		return name;
+	}
+
+	@Override
+	public boolean equals(Object o){
+		if(o instanceof Coin){
+			Coin coinObj = (Coin) o;
+			return (this.name.equals(coinObj.getName()) && this.value == coinObj.getValue());
+		}else
+			return false;
+	}
+
+	/**
 	*	Overrides the default toString for coin
 	* 	returns the name of the coin
 	*	@return name

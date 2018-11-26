@@ -7,6 +7,11 @@ public class LineItem {
         this.quantity = quantity;
     }
 
+	LineItem(String description, double price, int quantity){
+		this.product = new Product(description, price);
+		this.quantity = quantity;
+	}
+
     public Product getProduct(){
         return product;
     }
@@ -19,17 +24,13 @@ public class LineItem {
         this.quantity = quantity;
     }
 	
-	public boolean decrementQuantity(){
+	public void decrementQuantity(){
 		if(quantity >= 1)
 			this.quantity--;
-		else
-			return false;
-			
-		return true;
 	}
 
     @Override
     public String toString(){
-        return product.toString() + ", " + quantity;
+        return product.toString() + "," + quantity;
     }
 }
