@@ -21,7 +21,7 @@ class VendingMachine {
      * product only once. 
      * @return String
      */
-	public String showProducts(){ //
+	public String showProducts(){ //todo Convert to lineItem and only show products in stock stock
 		Product[] productList = getProductTypes();
 		String output = "";
 		for (Product p : productList)
@@ -35,7 +35,7 @@ class VendingMachine {
      * product only once. (I'm proud of this one)
      * @return Product[]
      */
-    public Product[] getProductTypes(){
+    public Product[] getProductTypes(){ //todo Convert to lineItem and only show products in stock stock
         ArrayList<Product> distinctProducts = new ArrayList<>();
         for(LineItem currentItem : stock){
             if(!distinctProducts.contains(currentItem.getProduct())) {

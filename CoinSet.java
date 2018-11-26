@@ -11,10 +11,10 @@ class CoinSet
     *  	Constructs a CoinSet object.
 	*	Initialises the ArrayList
    */
-   CoinSet()
+
+   public CoinSet()
    {
       set = new ArrayList<>();
-      //this is temporary, alans readfile called here for money
       set.add(new CoinLine(0.05, "5 Cent", 0));
       set.add(new CoinLine(0.10, "10 Cent", 0));
       set.add(new CoinLine(0.20, "20 Cent", 0));
@@ -29,7 +29,8 @@ class CoinSet
 	*	Adds a coin to the set of coins
 	*	@param coin
    */
-   void addCoin(Coin coin){
+
+   public void addCoin(Coin coin){
    		for(CoinLine cl : set){
    			if(coin.equals(cl.getCoin())){
    				cl.addQuantity(1);
@@ -42,7 +43,7 @@ class CoinSet
 	 * Returns the Coinset
 	 * @return Set of Coin Lines
 	 */
-	ArrayList<CoinLine> getSetOfCoins(){
+	public ArrayList<CoinLine> getSetOfCoins(){
 	   return set;
    }
 
@@ -51,7 +52,7 @@ class CoinSet
 	 * quantity of the coins in the passed in coinset to the quantity in the current coinset
 	 * @param inputCoinLineList An ArrayList of CoinLine
 	 */
-   void addSetOfCoins(ArrayList<CoinLine> inputCoinLineList){
+   public void addSetOfCoins(ArrayList<CoinLine> inputCoinLineList){
    		for(CoinLine inputCoinLine : inputCoinLineList){
    			for(CoinLine setCoinLine : set) {
 				if(inputCoinLine.equals(setCoinLine)) {
