@@ -1,20 +1,29 @@
 import javafx.application.Application;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import java.util.ArrayList;
 
 public class GUI extends Application {
 
     private Stage stage = new Stage();
     private boolean isAdmin = false;
     private boolean isCreate = false;
+    private boolean isAdding = false;
+
+    //****TEMP****
+    private ArrayList<LineItem> products = new ArrayList<>();
 
     /**
      * The run() method initializes the GUI methods
@@ -24,9 +33,11 @@ public class GUI extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) {
-        userMenu();
-    }
+    public void start(Stage primaryStage){
+        products.add(new LineItem((new Product("Fanta Zero", 1.75)), 10));
+        products.add(new LineItem((new Product("Coke", 1.99)), 5));
+
+        userMenu();}
 
     /**
      * This method takes a filled in GridPane and makes a window to display it. It closes the window
@@ -117,7 +128,7 @@ public class GUI extends Application {
             create.setOnAction(event -> {isCreate = true; adminLogin();});
 
             Button add = new Button("Add Product");
-            add.setOnAction(event -> addProduct());
+            add.setOnAction(event -> {isAdding = true; showProducts();});
 
             Button remove = new Button("Remove Money");
             remove.setOnAction(event -> {});
@@ -137,7 +148,7 @@ public class GUI extends Application {
 
         Image bottle = new Image((getClass().getResourceAsStream("images/showIcon.png")));
         Button display = new Button("", new ImageView(bottle));
-        display.setOnAction(event -> { });
+        display.setOnAction(event -> showProducts());
         Label showProducts = new Label("Show Products");
 
         Image coin = new Image((getClass().getResourceAsStream("images/coinIcon.png")));
@@ -166,53 +177,6 @@ public class GUI extends Application {
         show.setTop(bar);
         show.setCenter(pane);
 
-        display(show);
-    }
-
-    /**
-     *
-     */
-    private void addProduct(){
-        GridPane pane = new GridPane();
-        pane.setPadding(new Insets(10, 10, 10, 10));
-        pane.setVgap(5);
-        pane.setHgap(5);
-        pane.setAlignment(Pos.CENTER);
-
-        Label text1 = new Label("Description");
-        Label text2 = new Label("Price");
-        Label text3 = new Label("Quantity");
-
-        TextField field1 = new TextField();
-        TextField field2 = new TextField();
-        TextField field3 = new TextField();
-
-        Button submit = new Button("Submit");
-        submit.setOnAction(event -> {
-            try{
-                String desc = field1.getText();
-                double price = Double.parseDouble(field2.getText());
-                int quantity = Integer.parseInt(field3.getText());
-            } catch (Exception e){
-                error("Invalid input detected!");
-                addProduct();
-            }
-        });
-
-        Button cancel = new Button("Cancel");
-        cancel.setAlignment(Pos.BOTTOM_RIGHT);
-        cancel.setOnAction(event -> userMenu());
-
-        pane.add(text1, 0,0);
-        pane.add(text2, 0,1);
-        pane.add(text3, 0, 2);
-        pane.add(field1, 1, 0);
-        pane.add(field2, 1, 1);
-        pane.add(field3, 1,2);
-        pane.add(submit, 0, 3);
-        pane.add(cancel, 1, 3);
-
-        BorderPane show = new BorderPane(pane);
         display(show);
     }
 
@@ -259,6 +223,79 @@ public class GUI extends Application {
         display(show);
     }
 
+    private void showProducts(){
+        GridPane pane = new GridPane();
+        pane.setPadding(new Insets(10, 10, 10, 10));
+        pane.setVgap(5);
+        pane.setHgap(5);
+        pane.setAlignment(Pos.CENTER);
+        BorderPane show = new BorderPane();
+
+        TableView<LineItem> table = new TableView<>();
+
+        TableColumn<LineItem, String> nameCol = new TableColumn<>("Name");
+        TableColumn<LineItem, Double> priceCol= new TableColumn<>("Price");
+        TableColumn<LineItem, Integer>quantCol= new TableColumn<>("Quantity");
+        nameCol.setMinWidth(175);
+        priceCol.setMinWidth(100);
+        quantCol.setMinWidth(100);
+
+        nameCol.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getProduct().getDescription()));
+        priceCol.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getProduct().getPrice()));
+        quantCol.setCellValueFactory(new PropertyValueFactory<>("Quantity"));
+
+        ObservableList<LineItem> list = FXCollections.observableList(products);
+        table.setItems(list);
+
+        table.getColumns().addAll(nameCol, priceCol, quantCol);
+
+        if (isAdding){
+            Label text1 = new Label("Description");
+            Label text2 = new Label("Price");
+            Label text3 = new Label("Quantity");
+
+            TextField field1 = new TextField();
+            TextField field2 = new TextField();
+            TextField field3 = new TextField();
+
+            Button submit = new Button("Submit");
+            submit.setOnAction(event -> {
+                try{
+                    String desc = field1.getText();
+                    double price = Double.parseDouble(field2.getText());
+                    int quantity = Integer.parseInt(field3.getText());
+                    products.add(new LineItem(new Product(desc, price), quantity));
+                    showProducts();
+                } catch (Exception e){
+                    error("Invalid input detected!");
+                    showProducts();
+                }
+            });
+
+            pane.add(text1, 0,0);
+            pane.add(text2, 0,1);
+            pane.add(text3, 0, 2);
+            pane.add(field1, 1, 0);
+            pane.add(field2, 1, 1);
+            pane.add(field3, 1,2);
+            pane.add(submit, 1, 3);
+
+            GridPane.setHalignment(submit, HPos.RIGHT);
+        }
+
+        Image backArrow = new Image(getClass().getResourceAsStream("images/backArrow.png"));
+        Button back = new Button("", new ImageView(backArrow));
+        back.setOnAction(event -> {isAdding = false; userMenu();});
+
+        pane.add(back, 0, 3);
+        GridPane.setHalignment(back, HPos.LEFT);
+
+        show.setTop(table);
+        show.setCenter(pane);
+        display(show);
+    }
 
     /**
      *
