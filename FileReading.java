@@ -28,6 +28,8 @@ public class FileReading extends FileIO
 			while(in.hasNextLine())
 			{
 				lines = in.nextLine().split(",");
+				for(int i = 0; i < lines.length; i++)
+					lines[i] = lines[i].trim();
 				description = lines[0];
 				price = Double.parseDouble(lines[1]);
 				quantity = Integer.parseInt(lines[2]);
@@ -35,12 +37,10 @@ public class FileReading extends FileIO
 			}
 		}
 		catch(Exception e)
-		{
-			System.out.println("Error: parsing error in Stock file");
-		}
+		{}
 		return products;
 	}
-	public void readFromMoneyFile() throws IOException
+	public CoinSet readFromMoneyFile() throws IOException
 	{
 		coinSetArrayList = new ArrayList<CoinLine>();
 		CoinSet set = new CoinSet();
@@ -51,6 +51,8 @@ public class FileReading extends FileIO
 			while(in.hasNextLine())
 			{
 				lines = in.nextLine().split(",");
+				for(int i = 0; i < lines.length; i++)
+					lines[i] = lines[i].trim();
 				coinDescription = lines[0];
 				value = Double.parseDouble(lines[1]);
 				coinQuantity = Integer.parseInt(lines[2]);
@@ -59,9 +61,7 @@ public class FileReading extends FileIO
 			}
 		}
 		catch(Exception e)
-		{
-			System.out.println("Error: parsing error in Money file");
-		}
+		{}
 		set.addSetOfCoins(coinSetArrayList);
 		return set;
 	}
@@ -75,15 +75,15 @@ public class FileReading extends FileIO
 			while(in.hasNextLine())
 			{
 				lines = in.nextLine().split(",");
+				for(int i = 0; i < lines.length; i++)
+					lines[i] = lines[i].trim();
 				username = lines[0];
 				password = lines[1];
 				operators.add(username + "," + password);
 			}
 		}
 		catch(Exception e)
-		{
-			System.out.println("Error: parsing error in Operators file");
-		}
+		{}
 		return operators;
 	}
 }
