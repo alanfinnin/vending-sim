@@ -1,6 +1,6 @@
 import java.util.*;
 import java.io.*;
-public class FileReading
+public class FileReading extends FileIO
 {
 	private double price;
 	private String description;
@@ -9,6 +9,7 @@ public class FileReading
 	private String coinDescription;
 	private double value;
 	private int coinQuantity;
+	private ArrayList<CoinLine> coinSetArrayList;
 		
 	private String username;
 	private String password;
@@ -22,14 +23,13 @@ public class FileReading
 		ArrayList<LineItem> products = new ArrayList<LineItem>();
 		File stockFile = new File("Stock.txt");
 		Scanner in = new Scanner(stockFile);
-		
 		try
 		{
 			while(in.hasNextLine())
 			{
 				lines = in.nextLine().split(",");
-				price = Double.parseDouble(lines[0]);
-				description = lines[1];
+				description = lines[0];
+				price = Double.parseDouble(lines[1]);
 				quantity = Integer.parseInt(lines[2]);
 				products.add(new LineItem(new Product(description, price), quantity));
 			}
@@ -42,10 +42,10 @@ public class FileReading
 	}
 	public void readFromMoneyFile() throws IOException
 	{
+		coinSetArrayList = new ArrayList<CoinLine>();
 		CoinSet set = new CoinSet();
-		File stockFile = new File("Money.txt");
-		Scanner in = new Scanner(stockFile);
-		
+		File moneyFile = new File("Money.txt");
+		Scanner in = new Scanner(moneyFile);
 		try
 		{
 			while(in.hasNextLine())
@@ -55,21 +55,21 @@ public class FileReading
 				value = Double.parseDouble(lines[1]);
 				coinQuantity = Integer.parseInt(lines[2]);
 				
-				//set.addCoin(new Coin(value, coinDescription), quantity ??);
+				coinSetArrayList.add(new CoinLine(value, coinDescription, coinQuantity));
 			}
 		}
 		catch(Exception e)
 		{
 			System.out.println("Error: parsing error in Money file");
 		}
-		//return set;
+		set.addSetOfCoins(coinSetArrayList);
+		return set;
 	}
 	public ArrayList readFromOperatorsFile() throws IOException
 	{
 		ArrayList<String> operators = new ArrayList<String>();
-		File stockFile = new File("Operators.txt");
-		Scanner in = new Scanner(stockFile);
-		
+		File operatorsFile = new File("Operators.txt");
+		Scanner in = new Scanner(operatorsFile);
 		try
 		{
 			while(in.hasNextLine())
