@@ -58,16 +58,13 @@ public class CoinLine {
 	public boolean equals(Object o){
 		if(o instanceof CoinLine) {
 			CoinLine clObj = (CoinLine) o;
-			if (coin.equals(clObj.getCoin())) {
-				return true;
-			} else
-				return false;
+			return coin.equals(clObj.getCoin());
 		}else
 			return false;
 	}
 
 	@Override
 	public String toString(){
-		return coin.getName() + ", " + coin.getValue() + ", " + this.quantity;
+		return coin.getName() + "," + coin.getValue() + "," + this.quantity;
 	}
 }

@@ -46,6 +46,15 @@ class VendingMachine {
         return distinctProducts.toArray(outputProducts);
     }
 
+    public ArrayList<LineItem> getProductsInStock(){
+        ArrayList<LineItem> inStockProducts = new ArrayList<>();
+        for(LineItem li : stock){
+            if(li.getQuantity() > 0)
+                inStockProducts.add(li);
+        }
+        return inStockProducts;
+    }
+
     /**
      * Increases credit by the value of the passed in coin
      * @param insertedCoin the Coin object being inserted

@@ -35,10 +35,7 @@ public class Coin {
 	public boolean equals(Object o){
 		if(o instanceof Coin){
 			Coin coinObj = (Coin) o;
-			if(this.name.equals(coinObj.getName()) && this.value == coinObj.getValue())
-				return true;
-			else
-				return false;
+			return (this.name.equals(coinObj.getName()) && this.value == coinObj.getValue());
 		}else
 			return false;
 	}
