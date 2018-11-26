@@ -15,15 +15,23 @@ public class FileWriting extends FileIO
 		moneyToFile(money);
 		operatorsToFile(operators);
 	}
+	/**
+	*	Saves products from an lineItem
+	*	arraylist to file using a FileWriter
+	*/
 	private void stockToFile(ArrayList<LineItem> stock) throws IOException
 	{
 		File stockFile = new File("Stock.txt");
-		FileWriter writer = new FileWriter(stockFile, true);
+		FileWriter writer = new FileWriter(stockFile);
 		for(int i = 0; i < stock.size(); i++)
-			writer.write(stock.get(i).toString());
+			writer.write(stock.get(i).toString() + "\r\n");
 		writer.flush();
 		writer.close();
 	}
+	/**
+	*	Saves money from a coinSet
+	*	to file using a FileWriter
+	*/
 	private void moneyToFile(CoinSet money) throws IOException
 	{
 		moneySet = new ArrayList<CoinLine>();
@@ -31,16 +39,21 @@ public class FileWriting extends FileIO
 		File moneyFile = new File("Money.txt");
 		FileWriter writer = new FileWriter(moneyFile);
 		for(int i = 0; i < moneySet.size(); i++)
-			writer.write(moneySet.get(i).toString());
+			writer.write(moneySet.get(i).toString() + "\r\n");
 		writer.flush();
 		writer.close();
 	}
+	/**
+	*	Saves the operators from an arraylist
+	*	of String type to file using a 
+	*	FileWriter
+	*/
 	private void operatorsToFile(ArrayList<String> operators) throws IOException
 	{
 		File operatorsFile = new File("Operators.txt");
 		FileWriter writer = new FileWriter(operatorsFile);
 		for(int i = 0; i < operators.size(); i++)
-			writer.write(operators.get(i));
+			writer.write(operators.get(i) + "\r\n");
 		writer.flush();
 		writer.close();
 	}
