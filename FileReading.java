@@ -18,6 +18,11 @@ public class FileReading extends FileIO
 	private String line;
 	private String[] lines;
 	
+	/**
+	*	takes products from the files
+	*	then puts them in an arraylist for 
+	*	return
+	*/
 	public ArrayList readFromStockFile() throws IOException
 	{
 		ArrayList<LineItem> products = new ArrayList<LineItem>();
@@ -40,6 +45,11 @@ public class FileReading extends FileIO
 		{}
 		return products;
 	}
+	/**
+	*	Pulls money from the file and should put 
+	*	it in a coinSet to be returned, currently 
+	*	broken, will fix
+	*/
 	public CoinSet readFromMoneyFile() throws IOException
 	{
 		coinSetArrayList = new ArrayList<CoinLine>();
@@ -65,6 +75,10 @@ public class FileReading extends FileIO
 		set.addSetOfCoins(coinSetArrayList);
 		return set;
 	}
+	/**
+	*	Pulls the info from the operators file,
+	*	puts them in an arraylist then returns it
+	*/
 	public ArrayList readFromOperatorsFile() throws IOException
 	{
 		ArrayList<String> operators = new ArrayList<String>();
