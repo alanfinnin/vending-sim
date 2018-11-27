@@ -11,9 +11,8 @@ public class FileReading extends FileIO
 	private int coinQuantity;
 	private ArrayList<CoinLine> coinSetArrayList;
 		
-	private String username;
-	private String password;
-	private String userTypeCode;
+	private String type;
+	private String code;
 	
 	private String line;
 	private String[] lines;
@@ -81,7 +80,7 @@ public class FileReading extends FileIO
 	*/
 	public ArrayList readFromOperatorsFile() throws IOException
 	{
-		ArrayList<String> operators = new ArrayList<String>();
+		ArrayList<Operator> operators = new ArrayList<Operator>();
 		File operatorsFile = new File("Operators.txt");
 		Scanner in = new Scanner(operatorsFile);
 		try
@@ -91,9 +90,9 @@ public class FileReading extends FileIO
 				lines = in.nextLine().split(",");
 				for(int i = 0; i < lines.length; i++)
 					lines[i] = lines[i].trim();
-				username = lines[0];
-				password = lines[1];
-				operators.add(username + "," + password);
+				type = lines[0];
+				code = lines[1];
+				operators.add(new Operator(type , code));
 			}
 		}
 		catch(Exception e)
