@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javax.swing.*;
 import java.util.ArrayList;
 
 public class GUI extends Application {
@@ -22,22 +23,20 @@ public class GUI extends Application {
     private boolean isCreate = false;
     private boolean isAdding = false;
 
-    //****TEMP****
-    private ArrayList<LineItem> products = new ArrayList<>();
+    private static VendingMachine machine;
 
     /**
      * The run() method initializes the GUI methods
      */
-    public static void run(){
+    public static void run(VendingMachine m){
+        machine = m;
         launch();
     }
 
     @Override
     public void start(Stage primaryStage){
-        products.add(new LineItem((new Product("Fanta Zero", 1.75)), 10));
-        products.add(new LineItem((new Product("Coke", 1.99)), 5));
-
-        userMenu();}
+        userMenu();
+    }
 
     /**
      * This method takes a filled in GridPane and makes a window to display it. It closes the window
@@ -123,6 +122,8 @@ public class GUI extends Application {
         admin.setOnAction(event -> adminLogin());
         bar.getItems().add(admin);
 
+        double money;
+
         if (isAdmin){
             Button create = new Button("Create Account");
             create.setOnAction(event -> {isCreate = true; adminLogin();});
@@ -131,7 +132,8 @@ public class GUI extends Application {
             add.setOnAction(event -> {isAdding = true; showProducts();});
 
             Button remove = new Button("Remove Money");
-            remove.setOnAction(event -> {});
+            remove.setOnAction(event -> {String s = "You have removed: " + machine.removeMoney();
+                JOptionPane.showMessageDialog(null, s, "Money emptied!", 1); });
 
 
             admin.setText("Logout");
@@ -158,7 +160,7 @@ public class GUI extends Application {
 
         Image cart = new Image((getClass().getResourceAsStream("images/buyIcon.png")));
         Button buy = new Button("", new ImageView(cart));
-        buy.setOnAction(event -> { });
+        buy.setOnAction(event -> buyProductMenu());
         Label buyProduct = new Label("Buy");
 
         pane.add(message, 0, 0, 3, 1);
@@ -195,17 +197,17 @@ public class GUI extends Application {
         Image euro2 = new Image(getClass().getResourceAsStream("images/euro2.png"));
 
         Button five = new Button("", new ImageView(cent5));
-        five.setOnAction(event -> System.out.println("5 cent"));
+        five.setOnAction(event -> machine.addCoin(new Coin(0.05, "5 Cent")));
         Button ten = new Button("", new ImageView(cent10));
-        ten.setOnAction(event -> System.out.println("10 cent"));
+        ten.setOnAction(event -> machine.addCoin(new Coin(0.1, "10 Cent")));
         Button twenty = new Button("", new ImageView(cent20));
-        twenty.setOnAction(event -> System.out.println("20 cent"));
+        twenty.setOnAction(event -> machine.addCoin(new Coin(0.2, "20 cent")));
         Button fifty = new Button("", new ImageView(cent50));
-        fifty.setOnAction(event -> System.out.println("50 cent"));
+        fifty.setOnAction(event -> machine.addCoin(new Coin(0.5, "50 Cent")));
         Button euro = new Button("", new ImageView(euro1));
-        euro.setOnAction(event -> System.out.println("1 euro"));
+        euro.setOnAction(event -> machine.addCoin(new Coin(1, "1 Euro")));
         Button twoEuro = new Button("", new ImageView(euro2));
-        twoEuro.setOnAction(event -> System.out.println("2 euro"));
+        twoEuro.setOnAction(event -> machine.addCoin(new Coin(2, "2 Euro")));
 
         Image backArrow = new Image(getClass().getResourceAsStream("images/backArrow.png"));
         Button back = new Button("", new ImageView(backArrow));
@@ -231,6 +233,8 @@ public class GUI extends Application {
         pane.setAlignment(Pos.CENTER);
         BorderPane show = new BorderPane();
 
+        ArrayList<LineItem> arr = machine.getProductsInStock();
+
         TableView<LineItem> table = new TableView<>();
 
         TableColumn<LineItem, String> nameCol = new TableColumn<>("Name");
@@ -246,7 +250,7 @@ public class GUI extends Application {
                 new SimpleObjectProperty<>(cellData.getValue().getProduct().getPrice()));
         quantCol.setCellValueFactory(new PropertyValueFactory<>("Quantity"));
 
-        ObservableList<LineItem> list = FXCollections.observableList(products);
+        ObservableList<LineItem> list = FXCollections.observableList(arr);
         table.setItems(list);
 
         table.getColumns().addAll(nameCol, priceCol, quantCol);
@@ -266,10 +270,10 @@ public class GUI extends Application {
                     String desc = field1.getText();
                     double price = Double.parseDouble(field2.getText());
                     int quantity = Integer.parseInt(field3.getText());
-                    products.add(new LineItem(new Product(desc, price), quantity));
+                    machine.addProduct(new Product(desc, price), quantity);
                     showProducts();
                 } catch (Exception e){
-                    error("Invalid input detected!");
+                    JOptionPane.showMessageDialog(null, "Invalid input!", "Error", JOptionPane.ERROR_MESSAGE);
                     showProducts();
                 }
             });
@@ -297,22 +301,15 @@ public class GUI extends Application {
         display(show);
     }
 
-    /**
-     *
-     * @param s
-     */
-    private void error(String s){
-        GridPane pane = new GridPane();
-        pane.setPadding(new Insets(10, 10, 10, 10));
-        pane.setVgap(5);
-        pane.setHgap(5);
-        pane.setAlignment(Pos.CENTER);
-
-        Label error = new Label(s);
-
-        pane.add(error, 0, 0);
-
-        BorderPane show = new BorderPane(pane);
-        display(show);
+    private void buyProductMenu(){
+        Product[] prod = machine.getProductTypes();
+        if (prod.length == 0){
+            JOptionPane.showMessageDialog(null, "There are no products in stock, contact Operator", "Error", JOptionPane.ERROR_MESSAGE);
+            userMenu();
+        } else {
+            Product p = (Product) JOptionPane.showInputDialog(null, "What product would you like to buy?", "Buy", -1, null, prod, prod[0]);
+            machine.buyProduct(p);
+            userMenu();
+        }
     }
 }
