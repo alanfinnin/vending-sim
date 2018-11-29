@@ -22,6 +22,7 @@ public class GUI extends Application {
     private boolean isAdmin = false;
     private boolean isCreate = false;
     private boolean isAdding = false;
+    private boolean isBuying = false;
 
     private static VendingMachine machine;
 
@@ -50,7 +51,18 @@ public class GUI extends Application {
     private void display(BorderPane pane){
         Scene scene = new Scene(pane);
         stage.setScene(scene);
+        stage.centerOnScreen();
         stage.show();
+    }
+
+    private GridPane defGPane(){
+        GridPane pane = new GridPane();
+        pane.setPadding(new Insets(10, 10, 10, 10));
+        pane.setVgap(5);
+        pane.setHgap(5);
+        pane.setAlignment(Pos.CENTER);
+
+        return pane;
     }
 
     /**
@@ -59,11 +71,7 @@ public class GUI extends Application {
      * validates the data. The pane also contains a button that leads to the createAccount() method.
      */
     private void adminLogin() {
-        GridPane pane = new GridPane();
-        pane.setPadding(new Insets(10, 10, 10, 10));
-        pane.setVgap(5);
-        pane.setHgap(5);
-        pane.setAlignment(Pos.CENTER);
+        GridPane pane = defGPane();
 
         Label email = new Label("Email");
         Label pass  = new Label("Password");
@@ -109,11 +117,7 @@ public class GUI extends Application {
      *
      */
     private void userMenu(){
-        GridPane pane = new GridPane();
-        pane.setPadding(new Insets(10, 10, 10, 10));
-        pane.setVgap(5);
-        pane.setHgap(5);
-        pane.setAlignment(Pos.CENTER);
+        GridPane pane = defGPane();
 
         ToolBar bar = new ToolBar();
         Image gear = new Image(getClass().getResourceAsStream("images/gear.png"));
@@ -121,28 +125,7 @@ public class GUI extends Application {
         admin.setOnAction(event -> adminLogin());
         bar.getItems().add(admin);
 
-        double money;
-
-        if (isAdmin){
-            Button create = new Button("Create Account");
-            create.setOnAction(event -> {isCreate = true; adminLogin();});
-
-            Button add = new Button("Add Product");
-            add.setOnAction(event -> {isAdding = true; showProducts();});
-
-            Button remove = new Button("Remove Money");
-            remove.setOnAction(event -> {String s = "You have removed: " + machine.removeMoney();
-                JOptionPane.showMessageDialog(null, s, "Money emptied!", 1); });
-
-
-            admin.setText("Logout");
-            admin.cancelButtonProperty();
-            admin.setOnAction(event -> {isAdmin = false; userMenu();});
-
-            bar.getItems().add(create);
-            bar.getItems().add(add);
-            bar.getItems().add(remove);
-        }
+        if (isAdmin) bar = showAdmin();
 
         Label message = new Label("What would you like to do?\n");
         message.setStyle("-fx-font-size: 2em; ");
@@ -159,7 +142,7 @@ public class GUI extends Application {
 
         Image cart = new Image((getClass().getResourceAsStream("images/buyIcon.png")));
         Button buy = new Button("", new ImageView(cart));
-        buy.setOnAction(event -> buyProductMenu());
+        buy.setOnAction(event -> {isBuying = true; showProducts();});
         Label buyProduct = new Label("Buy");
 
         pane.add(message, 0, 0, 3, 1);
@@ -182,11 +165,7 @@ public class GUI extends Application {
     }
 
     private void chooseCoin(){
-        GridPane pane = new GridPane();
-        pane.setPadding(new Insets(10, 10, 10, 10));
-        pane.setVgap(5);
-        pane.setHgap(5);
-        pane.setAlignment(Pos.CENTER);
+        GridPane pane = defGPane();
 
         Image cent5 = new Image(getClass().getResourceAsStream("images/5cent.png"));
         Image cent10 = new Image(getClass().getResourceAsStream("images/cent10.png"));
@@ -225,11 +204,7 @@ public class GUI extends Application {
     }
 
     private void showProducts(){
-        GridPane pane = new GridPane();
-        pane.setPadding(new Insets(10, 10, 10, 10));
-        pane.setVgap(5);
-        pane.setHgap(5);
-        pane.setAlignment(Pos.CENTER);
+        GridPane pane = defGPane();
         BorderPane show = new BorderPane();
 
         ArrayList<LineItem> arr = machine.getProductsInStock();
@@ -240,8 +215,8 @@ public class GUI extends Application {
         TableColumn<LineItem, Double> priceCol= new TableColumn<>("Price");
         TableColumn<LineItem, Integer>quantCol= new TableColumn<>("Quantity");
         nameCol.setMinWidth(175);
-        priceCol.setMinWidth(100);
-        quantCol.setMinWidth(100);
+        priceCol.setMinWidth(50);
+        quantCol.setMinWidth(50);
 
         nameCol.setCellValueFactory(cellData ->
                 new SimpleObjectProperty<>(cellData.getValue().getProduct().getDescription()));
@@ -252,45 +227,29 @@ public class GUI extends Application {
         ObservableList<LineItem> list = FXCollections.observableList(arr);
         table.setItems(list);
 
-        table.getColumns().addAll(nameCol, priceCol, quantCol);
+        table.getColumns().add(nameCol);
+        table.getColumns().add(priceCol);
+        table.getColumns().add(quantCol);
 
-        if (isAdding){
-            Label text1 = new Label("Description");
-            Label text2 = new Label("Price");
-            Label text3 = new Label("Quantity");
-
-            TextField field1 = new TextField();
-            TextField field2 = new TextField();
-            TextField field3 = new TextField();
-
-            Button submit = new Button("Submit");
-            submit.setOnAction(event -> {
-                try{
-                    String desc = field1.getText();
-                    double price = Double.parseDouble(field2.getText());
-                    int quantity = Integer.parseInt(field3.getText());
-                    machine.addProduct(new Product(desc, price), quantity);
-                    showProducts();
-                } catch (Exception e){
-                    JOptionPane.showMessageDialog(null, "Invalid input!", "Error", JOptionPane.ERROR_MESSAGE);
-                    showProducts();
+        if (isBuying){
+            Button action = new Button("Buy");
+            action.setOnAction(event -> {
+                try {
+                    LineItem line = table.getSelectionModel().getSelectedItem();
+                    //machine.buyProduct(line.getProduct());
+                } catch (NullPointerException e){
+                    JOptionPane.showMessageDialog(null, "No product selected!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             });
-
-            pane.add(text1, 0,0);
-            pane.add(text2, 0,1);
-            pane.add(text3, 0, 2);
-            pane.add(field1, 1, 0);
-            pane.add(field2, 1, 1);
-            pane.add(field3, 1,2);
-            pane.add(submit, 1, 3);
-
-            GridPane.setHalignment(submit, HPos.RIGHT);
+            action.setAlignment(Pos.TOP_RIGHT);
+            pane.add(action, 1, 3);
         }
+
+        if (isAdding) pane = showAdd();
 
         Image backArrow = new Image(getClass().getResourceAsStream("images/backArrow.png"));
         Button back = new Button("", new ImageView(backArrow));
-        back.setOnAction(event -> {isAdding = false; userMenu();});
+        back.setOnAction(event -> {isAdding = false; isBuying = false; userMenu();});
 
         pane.add(back, 0, 3);
         GridPane.setHalignment(back, HPos.LEFT);
@@ -300,19 +259,71 @@ public class GUI extends Application {
         display(show);
     }
 
-    private void buyProductMenu(){
-        Product[] prod = machine.getProductTypes();
-        if (prod.length == 0){
-            JOptionPane.showMessageDialog(null, "There are no products in stock, contact Operator", "Error", JOptionPane.ERROR_MESSAGE);
-            userMenu();
-        } else {
-            Product choice = (Product) JOptionPane.showInputDialog(null, "What product would you like to buy?", "Buy", -1, null, prod, prod[0]);
-            if (choice.getPrice() < machine.getCredit()){
-                machine.buyProduct(choice);
-                userMenu();
-            } else if (choice.getPrice() > machine.getCredit()){
-                JOptionPane.showMessageDialog(null, "Insufficient Funds", "Error", JOptionPane.ERROR_MESSAGE);
+    public GridPane showAdd(){
+        GridPane pane = defGPane();
+        Label text1 = new Label("Description");
+        Label text2 = new Label("Price");
+        Label text3 = new Label("Quantity");
+
+        TextField field1 = new TextField();
+        field1.setPromptText("Fanta");
+        TextField field2 = new TextField();
+        field2.setPromptText("1.95");
+        TextField field3 = new TextField();
+        field3.setPromptText("21");
+
+        Button submit = new Button("Submit");
+        submit.setOnAction(event -> {
+            try{
+                String desc = field1.getText();
+                double price = Double.parseDouble(field2.getText());
+                int quantity = Integer.parseInt(field3.getText());
+                machine.addProduct(new Product(desc, price), quantity);
+                showProducts();
+            } catch (Exception e){
+                JOptionPane.showMessageDialog(null, "Invalid input!", "Error", JOptionPane.ERROR_MESSAGE);
             }
-        }
+        });
+
+        pane.add(text1, 0,0);
+        pane.add(text2, 0,1);
+        pane.add(text3, 0, 2);
+        pane.add(field1, 1, 0);
+        pane.add(field2, 1, 1);
+        pane.add(field3, 1,2);
+        pane.add(submit, 1, 3);
+
+        GridPane.setHalignment(submit, HPos.RIGHT);
+
+        return pane;
+    }
+
+    public ToolBar showAdmin(){
+        ToolBar bar = new ToolBar();
+
+        Image gear = new Image(getClass().getResourceAsStream("images/gear.png"));
+        Button admin = new Button("Login", new ImageView(gear));
+
+        Button create = new Button("Create Account");
+        create.setOnAction(event -> {isCreate = true; adminLogin();});
+
+        Button add = new Button("Add Product");
+        add.setOnAction(event -> {isAdding = true; showProducts();});
+
+        Button remove = new Button("Remove Money");
+        remove.setOnAction(event -> {String s = "You have removed: " + machine.removeMoney();
+            JOptionPane.showMessageDialog(null, s, "Money emptied!", 1); });
+
+
+        admin.setText("Logout");
+        admin.cancelButtonProperty();
+        admin.setOnAction(event -> {isAdmin = false; userMenu();});
+
+        bar.getItems().add(admin);
+        bar.getItems().add(create);
+        bar.getItems().add(add);
+        bar.getItems().add(remove);
+
+        return bar;
     }
 }
