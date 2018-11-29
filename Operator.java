@@ -1,70 +1,86 @@
 public class Operator {
-    private String type,t;
-    private String code,c;
-    private static ArrayList<Operator> list = new ArrayList<Operator>();
-
-
-	Operator(){
-		this.type = "Customer";
-		this.code = "0000";
-		list.add(this);
+	private String type;
+        private String code;
+	private String permissions;
+	
+	Operator()
+	{
+		type = "User";
+		code = "0000";
+		permissions = "000";
 	}
-
-	Operator(String type, String code){
+	
+	Operator(String type, String code, String permissions)
+	{
 		this.type = type;
 		this.code = code;
-		list.add(this);
-		/* if(type=="Admin")
-		{
-			
-		} */
-    }
+		this.permissions = permissions;
+   	}
     
-    public void setType(String t)
-    {
-        t = type;
-    }
+    	public void setType(String t)
+    	{
+    	    t = type;
+    	}
 
-    public String getType()
-    {
-        return type;
-    }
+   	 public String getType()
+   	 {
+   	     return type;
+         }
     
-    public void setCode(String c)
-    {
-        c = code;
-    }
+    	public void setCode(String c)
+    	{
+    	    c = code;
+    	}
 	
-    public String getCode()
-    {
-	return code;
-    }
-    public ArrayList<Operator> getList()
-    {
-        return this.list;
-    }
-	
-    public boolean getAccount(String t, String c)
-    {
-	for(int i = 0; i < list.size(); i++)
+	public String getCode()
 	{
-		if(list.get(i).toString().contains(t+c))
+		return code;
+	}
+	
+    	public ArrayList<Operator> getAccounts(ArrayList<Operator> accounts)
+    	{
+    	    return accounts;
+    	}
+	
+	public boolean canRemove()
+	{
+		if(permissions.substring(0,1).contains("1"))
 		{
 			return true;
 		}
+		else
+		{
+			return false;
+		}
 	}
-	return false;
-    }
 	
-    public void addAccount(String t, String c)//NEED TO FIX THIS METHOD
-    {
-	this.t = t;
-	this.c = t;
-	list.add(this);
-    }
+	public boolean canAddProduct()
+	{
+		if(permissions.substring(2,3).contains("1"))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 	
-    public String toString()
-    {
-	return getType() + getCode();
-    }
+	public boolean canCreateAccount()
+	{
+		if(permissions.substring(1,2).contains("1"))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	@Override
+	public String toString()
+	{
+		return description + "," + price;
+	}
 }
