@@ -20,13 +20,21 @@ class VendingMachine {
         Coin[] tempCoins = new Coin[coins.size()];
         return coins.getAcceptedCoins().toArray(tempCoins);
     }
-    
+
     public Operator getOperator(int i){
         return operators.get(i);
     }
-    
+
     public void addOperator(Operator o){
         operators.add(o);
+    }
+
+    public int numOperators(){
+        return operators.size();
+    }
+
+    public double getCredit(){
+        return currentCoins.getValue();
     }
 
 	/**
