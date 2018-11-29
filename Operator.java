@@ -1,6 +1,7 @@
+import java.util.ArrayList;
 public class Operator {
 	private String type;
-        private String code;
+    private String code;
 	private String permissions;
 	
 	Operator()
@@ -10,37 +11,36 @@ public class Operator {
 		permissions = "000";
 	}
 	
-	Operator(String type, String code, String permissions)
-	{
+	Operator(String type, String code, String permissions){
 		this.type = type;
 		this.code = code;
 		this.permissions = permissions;
-   	}
+    }
     
-    	public void setType(String t)
-    	{
-    	    t = type;
-    	}
+    public void setType(String t)
+    {
+        t = type;
+    }
 
-   	 public String getType()
-   	 {
-   	     return type;
-         }
+    public String getType()
+    {
+        return type;
+    }
     
-    	public void setCode(String c)
-    	{
-    	    c = code;
-    	}
+    public void setCode(String c)
+    {
+        c = code;
+    }
 	
 	public String getCode()
 	{
 		return code;
 	}
 	
-    	public ArrayList<Operator> getAccounts(ArrayList<Operator> accounts)
-    	{
-    	    return accounts;
-    	}
+    public ArrayList<Operator> getAccounts(ArrayList<Operator> accounts)
+    {
+        return accounts;
+    }
 	
 	public boolean canRemove()
 	{
@@ -81,6 +81,6 @@ public class Operator {
 	@Override
 	public String toString()
 	{
-		return description + "," + price;
+		return type + "," + code;
 	}
 }
