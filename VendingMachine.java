@@ -63,6 +63,11 @@ class VendingMachine {
         coins.clearCoinSet();
         return amountRemoved;
     }
+	
+    public double getCredit(){
+        return currentCoins.getValue();
+    }
+
 
     /**
      * Checks if a user has enough credit to buy a given product, then removes it
