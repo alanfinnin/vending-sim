@@ -14,11 +14,12 @@ public class FileReading extends FileIO
 	private String type;
 	private String code;
 	
+	
 	private String line;
 	private String[] lines;
 	
 	/**
-	*	takes products from the files
+	*	Takes products from the files
 	*	then puts them in an arraylist for 
 	*	return
 	*/
@@ -65,14 +66,20 @@ public class FileReading extends FileIO
 				coinDescription = lines[0];
 				value = Double.parseDouble(lines[1]);
 				coinQuantity = Integer.parseInt(lines[2]);
-				
+				System.out.println("FROM FILE\t" + value + " " + coinDescription + " " + coinQuantity);
 				coinSetArrayList.add(new CoinLine(value, coinDescription, coinQuantity));
 			}
 		}
 		catch(Exception e)
 		{}
-		set.addSetOfCoins(coinSetArrayList);
-		return set;
+		//set.addSetOfCoins(coinSetArrayList);
+		for(int i = 0; i < coinSetArrayList.size(); i++)
+		{
+			coinSetArrayList.get(i).setQuantity(coinQuantity);
+			set.addCoin(coinSetArrayList.get(i).getCoin());
+			System.out.println("\nfor loop for adding to arraylist\n\tSET:\t\n" + set.toString());
+		}
+		return set;//coinSet
 	}
 	/**
 	*	Pulls the info from the operators file,
