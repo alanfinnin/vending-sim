@@ -35,6 +35,10 @@ public class GUI extends Application {
 
     @Override
     public void start(Stage primaryStage){
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("images/stage_vend_icon.png")));
+        stage.setTitle("Vending Machine Simulation");
+        stage.setMinHeight(150);
+        stage.setMinWidth(350);
         userMenu();
     }
 
@@ -44,13 +48,8 @@ public class GUI extends Application {
      * @param pane A filled in GridPane to be displayed.
      */
     private void display(BorderPane pane){
-        stage.close();
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("images/stage_vend_icon.png")));
-        stage.setMinHeight(150);
-        stage.setMinWidth(350);
         Scene scene = new Scene(pane);
         stage.setScene(scene);
-        stage.setTitle("Vending Machine Simulation");
         stage.show();
     }
 
@@ -307,9 +306,13 @@ public class GUI extends Application {
             JOptionPane.showMessageDialog(null, "There are no products in stock, contact Operator", "Error", JOptionPane.ERROR_MESSAGE);
             userMenu();
         } else {
-            Product p = (Product) JOptionPane.showInputDialog(null, "What product would you like to buy?", "Buy", -1, null, prod, prod[0]);
-            machine.buyProduct(p);
-            userMenu();
+            Product choice = (Product) JOptionPane.showInputDialog(null, "What product would you like to buy?", "Buy", -1, null, prod, prod[0]);
+            if (choice.getPrice() < machine.getCredit()){
+                machine.buyProduct(choice);
+                userMenu();
+            } else if (choice.getPrice() > machine.getCredit()){
+                JOptionPane.showMessageDialog(null, "Insufficient Funds", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 }
