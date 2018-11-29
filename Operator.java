@@ -42,7 +42,7 @@ public class Operator {
         return accounts;
     }
 	
-	public boolean canCreateAccountcanRemove()
+	public boolean canCreateAccount()
 	{
 		if(permissions.substring(0,1).contains("1"))
 		{
