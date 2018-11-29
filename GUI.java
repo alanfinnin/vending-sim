@@ -2,23 +2,28 @@ import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javax.swing.*;
 import java.util.ArrayList;
 
 public class GUI extends Application {
 
+    private static Operator currentUser;
     private Stage stage = new Stage();
+
     private boolean isAdmin = false;
     private boolean isCreate = false;
     private boolean isAdding = false;
@@ -30,6 +35,7 @@ public class GUI extends Application {
      * The run() method initializes the GUI methods
      */
     public static void run(VendingMachine m){
+        currentUser = new Operator("User", "0000", "010");
         machine = m;
         launch();
     }
@@ -72,6 +78,7 @@ public class GUI extends Application {
      */
     private void adminLogin() {
         GridPane pane = defGPane();
+        BorderPane show = new BorderPane();
 
         Label email = new Label("Email");
         Label pass  = new Label("Password");
@@ -90,11 +97,36 @@ public class GUI extends Application {
         back.setOnAction(event -> userMenu());
 
         if (isCreate){
+            VBox perm = new VBox(5);
+            perm.setPadding(new Insets(3, 3, 3, 3));
+
+            Label heading = new Label("Permissions: ");
+            CheckBox create = new CheckBox("Create Account");
+            CheckBox add = new CheckBox("Add Product");
+            CheckBox remove = new CheckBox("Remove Money");
+
+            perm.getChildren().addAll(heading, create, add, remove);
+
+            EventHandler handler = event -> {
+                if (create.isSelected()){
+
+                } else if (add.isSelected()){
+
+                } else if(remove.isSelected()){
+
+                }
+            };
+
+            create.setOnAction(handler);
+            add.setOnAction(handler);
+            remove.setOnAction(handler);
+
             Label check = new Label("Confirm Password");
             PasswordField verify = new PasswordField();
 
             pane.add(check, 0, 2);
             pane.add(verify, 1, 2, 2, 1);
+            show.setRight(perm);
             isCreate = false;
         }
 
@@ -109,7 +141,7 @@ public class GUI extends Application {
         GridPane.setHalignment(submit, HPos.RIGHT);
         GridPane.setHalignment(back, HPos.RIGHT);
 
-        BorderPane show = new BorderPane(pane);
+        show.setLeft(pane);
         display(show);
     }
 
@@ -175,21 +207,33 @@ public class GUI extends Application {
         Image euro2 = new Image(getClass().getResourceAsStream("images/euro2.png"));
 
         Button five = new Button("", new ImageView(cent5));
-        five.setOnAction(event -> machine.addCoin(new Coin(0.05, "5 Cent")));
+        five.setOnAction(event -> {machine.addCoin(new Coin(0.05, "5 Cent")); chooseCoin();});
         Button ten = new Button("", new ImageView(cent10));
-        ten.setOnAction(event -> machine.addCoin(new Coin(0.1, "10 Cent")));
+        ten.setOnAction(event -> {machine.addCoin(new Coin(0.1, "10 Cent")); chooseCoin();});
         Button twenty = new Button("", new ImageView(cent20));
-        twenty.setOnAction(event -> machine.addCoin(new Coin(0.2, "20 cent")));
+        twenty.setOnAction(event -> {machine.addCoin(new Coin(0.2, "20 cent")); chooseCoin();});
         Button fifty = new Button("", new ImageView(cent50));
-        fifty.setOnAction(event -> machine.addCoin(new Coin(0.5, "50 Cent")));
+        fifty.setOnAction(event -> {machine.addCoin(new Coin(0.5, "50 Cent")); chooseCoin();});
         Button euro = new Button("", new ImageView(euro1));
-        euro.setOnAction(event -> machine.addCoin(new Coin(1, "1 Euro")));
+        euro.setOnAction(event -> {machine.addCoin(new Coin(1, "1 Euro")); chooseCoin();});
         Button twoEuro = new Button("", new ImageView(euro2));
-        twoEuro.setOnAction(event -> machine.addCoin(new Coin(2, "2 Euro")));
+        twoEuro.setOnAction(event -> {machine.addCoin(new Coin(2, "2 Euro")); chooseCoin();});
+
+        HBox row = new HBox();
+        row.setPadding(new Insets(5, 5, 5, 5));
 
         Image backArrow = new Image(getClass().getResourceAsStream("images/backArrow.png"));
         Button back = new Button("", new ImageView(backArrow));
         back.setOnAction(event -> userMenu());
+
+        String money = "\u20ac" + String.format("%.2f", machine.getCredit());
+        Label credit = new Label(money);
+        credit.setStyle("-fx-font-size: 2em; ");
+
+        Region region = new Region();
+        HBox.setHgrow(region, Priority.ALWAYS);
+
+        row.getChildren().addAll(back, region, credit);
 
         pane.add(five, 0,0);
         pane.add(ten, 1, 0);
@@ -197,15 +241,19 @@ public class GUI extends Application {
         pane.add(fifty, 0,1);
         pane.add(euro, 1, 1);
         pane.add(twoEuro, 2, 1);
-        pane.add(back, 0,2);
 
-        BorderPane show = new BorderPane(pane);
+        BorderPane show = new BorderPane();
+        show.setTop(pane);
+        show.setBottom(row);
         display(show);
     }
 
     private void showProducts(){
         GridPane pane = defGPane();
         BorderPane show = new BorderPane();
+        HBox row = new HBox(40);
+        row.setPadding(new Insets(10,10,10,10));
+        row.setAlignment(Pos.CENTER);
 
         ArrayList<LineItem> arr = machine.getProductsInStock();
 
@@ -231,31 +279,46 @@ public class GUI extends Application {
         table.getColumns().add(priceCol);
         table.getColumns().add(quantCol);
 
+        if (isAdding) {
+            pane = showAdd();
+            show.setCenter(pane);
+        } else {
+            Image backArrow = new Image(getClass().getResourceAsStream("images/backArrow.png"));
+            Button back = new Button("", new ImageView(backArrow));
+            back.setOnAction(event -> {isAdding = false; isBuying = false; userMenu();});
+
+            String money = "\u20ac" + String.format("%.2f", machine.getCredit());
+            Label credit = new Label(money);
+            credit.setStyle("-fx-font-size: 2em; ");
+
+            Region region1 = new Region();
+            HBox.setHgrow(region1, Priority.ALWAYS);
+
+            row.getChildren().addAll(back, region1, credit);
+            show.setBottom(row);
+        }
+
         if (isBuying){
             Button action = new Button("Buy");
             action.setOnAction(event -> {
                 try {
                     LineItem line = table.getSelectionModel().getSelectedItem();
-                    //machine.buyProduct(line.getProduct());
+                    boolean bought = machine.buyProduct(line.getProduct());
+                    if (!bought){
+                        JOptionPane.showMessageDialog(null, "Insufficient Funds!", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 } catch (NullPointerException e){
                     JOptionPane.showMessageDialog(null, "No product selected!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             });
-            action.setAlignment(Pos.TOP_RIGHT);
-            pane.add(action, 1, 3);
+            action.setAlignment(Pos.CENTER_RIGHT);
+
+            Region region2 = new Region();
+            HBox.setHgrow(region2, Priority.ALWAYS);
+            row.getChildren().addAll(region2, action);
         }
 
-        if (isAdding) pane = showAdd();
-
-        Image backArrow = new Image(getClass().getResourceAsStream("images/backArrow.png"));
-        Button back = new Button("", new ImageView(backArrow));
-        back.setOnAction(event -> {isAdding = false; isBuying = false; userMenu();});
-
-        pane.add(back, 0, 3);
-        GridPane.setHalignment(back, HPos.LEFT);
-
         show.setTop(table);
-        show.setCenter(pane);
         display(show);
     }
 
@@ -295,6 +358,13 @@ public class GUI extends Application {
 
         GridPane.setHalignment(submit, HPos.RIGHT);
 
+        Image backArrow = new Image(getClass().getResourceAsStream("images/backArrow.png"));
+        Button back = new Button("", new ImageView(backArrow));
+        back.setOnAction(event -> {isAdding = false; isBuying = false; userMenu();});
+
+        pane.add(back, 0, 3);
+        GridPane.setHalignment(back, HPos.LEFT);
+
         return pane;
     }
 
@@ -302,22 +372,32 @@ public class GUI extends Application {
         ToolBar bar = new ToolBar();
 
         Image gear = new Image(getClass().getResourceAsStream("images/gear.png"));
-        Button admin = new Button("Login", new ImageView(gear));
+        Button admin = new Button("Logout", new ImageView(gear));
+        admin.setOnAction(event -> {isAdmin = false; userMenu();});
 
         Button create = new Button("Create Account");
-        create.setOnAction(event -> {isCreate = true; adminLogin();});
+        if (currentUser.canCreateAccount()) {
+            create.setOnAction(event -> { isCreate = true; adminLogin(); });
+        } else {
+            create.setStyle("-fx-background-color: #797979");
+        }
 
         Button add = new Button("Add Product");
-        add.setOnAction(event -> {isAdding = true; showProducts();});
+        if (currentUser.canAddProduct()){
+            add.setOnAction(event -> {isAdding = true; showProducts();});
+        } else {
+            add.setStyle("-fx-background-color: #797979");
+        }
 
         Button remove = new Button("Remove Money");
-        remove.setOnAction(event -> {String s = "You have removed: " + machine.removeMoney();
-            JOptionPane.showMessageDialog(null, s, "Money emptied!", 1); });
-
-
-        admin.setText("Logout");
-        admin.cancelButtonProperty();
-        admin.setOnAction(event -> {isAdmin = false; userMenu();});
+        if (currentUser.canRemove()) {
+            remove.setOnAction(event -> {
+                String s = "You have removed: " + machine.removeMoney();
+                JOptionPane.showMessageDialog(null, s, "Money emptied!", 1);
+            });
+        } else {
+            remove.setStyle("-fx-background-color: #797979");
+        }
 
         bar.getItems().add(admin);
         bar.getItems().add(create);
