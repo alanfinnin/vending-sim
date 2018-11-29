@@ -12,7 +12,7 @@ public class FileIO
 		if(!(moneyFile.exists()))
 			moneyFile.createNewFile();
 		
-		File adminFile = new File("Operator.txt");
+		File adminFile = new File("Operators.txt");
 		if(!(adminFile.exists()))
 			adminFile.createNewFile();
 	}
