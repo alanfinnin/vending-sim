@@ -13,7 +13,12 @@ class VendingMachine {
     VendingMachine(){
         stock = new ArrayList<>();
 		coins = new CoinSet();
+		operators = new ArrayList<>();
 		currentCoins = new CoinSet();
+
+		operators.add(new Operator("User", "0000", "000"));
+		operators.add(new Operator("Create", "0000", "110"));
+		operators.add(new Operator("Remove", "1111", "001"));
     }
 
     Coin[] getAcceptableCoins(){
@@ -21,16 +26,13 @@ class VendingMachine {
         return coins.getAcceptedCoins().toArray(tempCoins);
     }
 
-    public Operator getOperator(int i){
-        return operators.get(i);
+    public ArrayList<Operator> getOperators(){
+        ArrayList<Operator> arr = (ArrayList) operators.clone();
+        return arr;
     }
 
-    public void addOperator(Operator o){
-        operators.add(o);
-    }
-
-    public int numOperators(){
-        return operators.size();
+    public void addOperator(Operator op){
+        operators.add(op);
     }
 
     public double getCredit(){
