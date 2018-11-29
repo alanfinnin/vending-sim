@@ -6,10 +6,6 @@ import java.util.Scanner;
  */
 public class VendingMachineMenu {
     private Scanner in;
-    private static Coin[] coins = {new Coin(0.05, "5 Cent"),
-            new Coin(0.1, "10 Cent"),
-            new Coin(0.5, "50 Cent"),
-            new Coin(1, "1 Euro")};
 
     /**
      * Constructs a VendingMachineMenu object
@@ -25,6 +21,7 @@ public class VendingMachineMenu {
      */
     public void run(VendingMachine machine) throws IOException {
         boolean more = true;
+        Coin[] coins = machine.getAcceptableCoins();
         while (more) {
             System.out.println("S)how products I)nsert coin B)uy A)dd product R)emove coins Q)uit ");
             String command = in.nextLine().toUpperCase();

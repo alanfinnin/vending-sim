@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 
 class VendingMachine {
@@ -10,10 +9,15 @@ class VendingMachine {
      * Constructs the vending machine and initialises the list of stock
 	 * and the set of coins
      */
-    public VendingMachine(){
+    VendingMachine(){
         stock = new ArrayList<>();
 		coins = new CoinSet();
 		currentCoins = new CoinSet();
+    }
+
+    Coin[] getAcceptableCoins(){
+        Coin[] tempCoins = new Coin[coins.size()];
+        return coins.getAcceptedCoins().toArray(tempCoins);
     }
 
 	/**
@@ -21,29 +25,40 @@ class VendingMachine {
      * product only once. 
      * @return String
      */
-	public String showProducts(){ //todo Convert to lineItem and only show products in stock stock
+	public String showProducts(){ //todo dont display out of stock product
 		Product[] productList = getProductTypes();
-		String output = "";
-		for (Product p : productList)
-			output += p.getDescription() + ", \u20ac" + p.getPrice() + "\n";
-		
-		return output;
+		StringBuilder output = new StringBuilder();
+		for (Product p : productList) {
+            output.append(p.getDescription());
+            output.append(", \u20ac");
+            output.append(p.getPrice());
+            output.append("\n");
+        }
+		return output.toString();
 	}
 	
     /**
      * Returns a list of all the product choices available from the machine, containing each
-     * product only once. (I'm proud of this one)
+     * product only once.
      * @return Product[]
      */
-    public Product[] getProductTypes(){ //todo Convert to lineItem and only show products in stock stock
-        ArrayList<Product> distinctProducts = new ArrayList<>();
-        for(LineItem currentItem : stock){
-            if(!distinctProducts.contains(currentItem.getProduct())) {
-                distinctProducts.add(currentItem.getProduct());
-            }
+    public Product[] getProductTypes(){
+        ArrayList<LineItem> inStockProducts = getProductsInStock();
+        int outputArraySize = inStockProducts.size();
+        Product[] outputProducts = new Product[outputArraySize];
+        for(int i = 0; i < outputArraySize; i++){
+                outputProducts[i] = inStockProducts.get(i).getProduct();
         }
-        Product[] outputProducts = new Product[distinctProducts.size()];
-        return distinctProducts.toArray(outputProducts);
+        return outputProducts;
+    }
+
+    public ArrayList<LineItem> getProductsInStock(){
+        ArrayList<LineItem> inStockProducts = new ArrayList<>();
+        for(LineItem li : stock){
+            if(li.getQuantity() > 0)
+                inStockProducts.add(li);
+        }
+        return inStockProducts;
     }
 
     /**
@@ -83,18 +98,19 @@ class VendingMachine {
      */
     public void buyProduct(Product p) throws VendingException{ //todo fix option to choose buying an out of  stock product
 		double currentCredit = currentCoins.getValue();
-        if(currentCredit >= p.getPrice()) {
-			for(LineItem item : stock){
-				if(p.equals(item.getProduct()) && item.getQuantity() >= 1) {
-					item.decrementQuantity();
-					coins.addSetOfCoins(currentCoins.getSetOfCoins());
-					currentCoins.clearCoinSet();
-				}else {
-					throw new VendingException("Not enough stock"); //todo make it display this when attempting to buy out of stock products, now it doesn't for unknown reason?
-				}
-			}
-        }else
-            throw new VendingException("Insufficient credit");
+        for(LineItem item : stock){
+            int currentItemQuantity = item.getQuantity();
+            Product currentItemProduct = item.getProduct();
+            if(p.equals(currentItemProduct) && currentItemQuantity >= 1 && currentCredit >= p.getPrice()) {
+                item.decrementQuantity();
+                coins.addSetOfCoins(currentCoins.getSetOfCoins());
+                currentCoins.clearCoinSet();
+            }else if(p.equals(currentItemProduct) && currentItemQuantity < 1){
+                throw new VendingException("Not enough stock");
+            }else if(p.equals(currentItemProduct) && currentCredit < p.getPrice()){
+                throw new VendingException("Insufficient credit");
+            }
+        }
     }
 
     /**

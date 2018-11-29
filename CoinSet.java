@@ -3,7 +3,7 @@ import java.util.ArrayList;
 /**
  *	A set of coins.
 */
-public class CoinSet
+class CoinSet
 {  
    private ArrayList<CoinLine> set;
 
@@ -11,9 +11,10 @@ public class CoinSet
     *  	Constructs a CoinSet object.
 	*	Initialises the ArrayList
    */
-   public CoinSet()
+   CoinSet()
    {
       set = new ArrayList<>();
+      //this is temporary, alans readfile called here for money
       set.add(new CoinLine(0.05, "5 Cent", 0));
       set.add(new CoinLine(0.10, "10 Cent", 0));
       set.add(new CoinLine(0.20, "20 Cent", 0));
@@ -28,7 +29,7 @@ public class CoinSet
 	*	Adds a coin to the set of coins
 	*	@param coin
    */
-   public void addCoin(Coin coin){
+   void addCoin(Coin coin){
    		for(CoinLine cl : set){
    			if(coin.equals(cl.getCoin())){
    				cl.addQuantity(1);
@@ -41,7 +42,7 @@ public class CoinSet
 	 * Returns the Coinset
 	 * @return Set of Coin Lines
 	 */
-	public ArrayList<CoinLine> getSetOfCoins(){
+	ArrayList<CoinLine> getSetOfCoins(){
 	   return set;
    }
 
@@ -50,7 +51,7 @@ public class CoinSet
 	 * quantity of the coins in the passed in coinset to the quantity in the current coinset
 	 * @param inputCoinLineList An ArrayList of CoinLine
 	 */
-   public void addSetOfCoins(ArrayList<CoinLine> inputCoinLineList){
+   void addSetOfCoins(ArrayList<CoinLine> inputCoinLineList){
    		for(CoinLine inputCoinLine : inputCoinLineList){
    			for(CoinLine setCoinLine : set) {
 				if(inputCoinLine.equals(setCoinLine)) {
@@ -65,7 +66,7 @@ public class CoinSet
 	*	Adds the value of all the coins in the set and returns the sum
 	*	@return value
    */
-   public double getValue(){
+   double getValue(){
 	   double value = 0;
 	   for(CoinLine cl : set){
 		   value += cl.getTotalValue();
@@ -76,8 +77,20 @@ public class CoinSet
    /**
 	*	Clears the set of coins
    */
-   public void clearCoinSet(){
+   void clearCoinSet(){
 	   set.clear();
+   }
+
+   ArrayList<Coin> getAcceptedCoins(){
+   		ArrayList<Coin> acceptableCoins = new ArrayList<>();
+   		for(CoinLine cl: set){
+   			acceptableCoins.add(cl.getCoin());
+		}
+		return acceptableCoins;
+   }
+
+   public int size(){
+   		return set.size();
    }
 
    @Override
