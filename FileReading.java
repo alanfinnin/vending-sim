@@ -13,6 +13,7 @@ public class FileReading extends FileIO
 		
 	private String type;
 	private String code;
+	private String permissions;
 	
 	
 	private String line;
@@ -66,19 +67,15 @@ public class FileReading extends FileIO
 				coinDescription = lines[0];
 				value = Double.parseDouble(lines[1]);
 				coinQuantity = Integer.parseInt(lines[2]);
-				System.out.println("FROM FILE\t" + value + " " + coinDescription + " " + coinQuantity);
-				coinSetArrayList.add(new CoinLine(value, coinDescription, coinQuantity));
+				coinSetArrayList.add(new CoinLine(new Coin(value, coinDescription), coinQuantity)); //coinLine
 			}
 		}
 		catch(Exception e)
 		{}
-		//set.addSetOfCoins(coinSetArrayList);
+		set.addSetOfCoins(coinSetArrayList);
 		for(int i = 0; i < coinSetArrayList.size(); i++)
-		{
-			coinSetArrayList.get(i).setQuantity(coinQuantity);
-			set.addCoin(coinSetArrayList.get(i).getCoin());
-			System.out.println("\nfor loop for adding to arraylist\n\tSET:\t\n" + set.toString());
-		}
+			if(!(set.getSetOfCoins().contains(coinSetArrayList.get(i))))
+				set.addCoin(coinSetArrayList.get(i));
 		return set;//coinSet
 	}
 	/**
@@ -99,7 +96,8 @@ public class FileReading extends FileIO
 					lines[i] = lines[i].trim();
 				type = lines[0];
 				code = lines[1];
-				operators.add(new Operator(type , code));
+				permissions = lines[2];
+				operators.add(new Operator(type , code, permissions));
 			}
 		}
 		catch(Exception e)
