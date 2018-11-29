@@ -9,7 +9,7 @@ public class FileWriting extends FileIO
 	*	this uses the other private methods to
 	*	carry out the saving
 	*/
-	public void fromArrayListToFiles(ArrayList<LineItem> stock, CoinSet money, ArrayList<String> operators) throws IOException
+	public void fromArrayListToFiles(ArrayList<LineItem> stock, CoinSet money, ArrayList<Operator> operators) throws IOException
 	{
 		stockToFile(stock);
 		moneyToFile(money);
@@ -48,12 +48,12 @@ public class FileWriting extends FileIO
 	*	of String type to file using a 
 	*	FileWriter
 	*/
-	private void operatorsToFile(ArrayList<String> operators) throws IOException
+	private void operatorsToFile(ArrayList<Operator> operators) throws IOException
 	{
 		File operatorsFile = new File("Operators.txt");
 		FileWriter writer = new FileWriter(operatorsFile);
 		for(int i = 0; i < operators.size(); i++)
-			writer.write(operators.get(i) + "\r\n");
+			writer.write(operators.get(i).toString() + "\r\n");
 		writer.flush();
 		writer.close();
 	}
