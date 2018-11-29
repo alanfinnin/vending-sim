@@ -42,7 +42,7 @@ public class Operator {
         return accounts;
     }
 	
-	public boolean canRemove()
+	public boolean canCreateAccountcanRemove()
 	{
 		if(permissions.substring(0,1).contains("1"))
 		{
@@ -56,7 +56,7 @@ public class Operator {
 	
 	public boolean canAddProduct()
 	{
-		if(permissions.substring(2,3).contains("1"))
+		if(permissions.substring(1,2).contains("1"))
 		{
 			return true;
 		}
@@ -66,9 +66,9 @@ public class Operator {
 		}
 	}
 	
-	public boolean canCreateAccount()
+	public boolean canRemove()
 	{
-		if(permissions.substring(1,2).contains("1"))
+		if(permissions.substring(2,3).contains("1"))
 		{
 			return true;
 		}
