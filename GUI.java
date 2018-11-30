@@ -16,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+
 import javax.swing.*;
 import java.util.ArrayList;
 
@@ -23,9 +24,6 @@ public class GUI extends Application {
 
     private static Operator currentUser;
     private Stage stage = new Stage();
-
-    private boolean isAdmin = false;
-    private boolean isCreate = false;
     private boolean isAdding = false;
     private boolean isBuying = false;
 
@@ -35,8 +33,8 @@ public class GUI extends Application {
      * The run() method initializes the GUI methods
      */
     public static void run(VendingMachine m){
-        currentUser = new Operator("User", "0000", "010");
         machine = m;
+        currentUser = machine.getOperators().get(0);
         launch();
     }
 
@@ -80,14 +78,26 @@ public class GUI extends Application {
         GridPane pane = defGPane();
         BorderPane show = new BorderPane();
 
-        Label email = new Label("Email");
+        Label email = new Label("Username");
         Label pass  = new Label("Password");
 
         TextField emailField = new TextField();
         PasswordField passField = new PasswordField();
 
         Button submit = new Button("Submit");
-        submit.setOnAction(event -> {isAdmin = true; userMenu();});
+        submit.setOnAction(event -> {
+            try{
+                Operator  op = Validation.loginCheck(machine, emailField.getText(), passField.getText());
+                if (op.equals(null)) {
+                    JOptionPane.showMessageDialog(null,"Incorrect Username or Password!", "Error", 0);
+                } else{
+                    currentUser = op;
+                    userMenu();
+                }
+            } catch (NullPointerException e){
+                JOptionPane.showMessageDialog(null,"Incorrect Username or Password!", "Error", 0);
+            }
+        });
 
         Button clear  = new Button("Clear");
         clear.setOnAction(event -> adminLogin());
@@ -95,40 +105,6 @@ public class GUI extends Application {
         Image backArrow = new Image(getClass().getResourceAsStream("images/backArrow.png"));
         Button back = new Button("", new ImageView(backArrow));
         back.setOnAction(event -> userMenu());
-
-        if (isCreate){
-            VBox perm = new VBox(5);
-            perm.setPadding(new Insets(3, 3, 3, 3));
-
-            Label heading = new Label("Permissions: ");
-            CheckBox create = new CheckBox("Create Account");
-            CheckBox add = new CheckBox("Add Product");
-            CheckBox remove = new CheckBox("Remove Money");
-
-            perm.getChildren().addAll(heading, create, add, remove);
-
-            EventHandler handler = event -> {
-                if (create.isSelected()){
-
-                } else if (add.isSelected()){
-
-                } else if(remove.isSelected()){
-
-                }
-            };
-
-            create.setOnAction(handler);
-            add.setOnAction(handler);
-            remove.setOnAction(handler);
-
-            Label check = new Label("Confirm Password");
-            PasswordField verify = new PasswordField();
-
-            pane.add(check, 0, 2);
-            pane.add(verify, 1, 2, 2, 1);
-            show.setRight(perm);
-            isCreate = false;
-        }
 
         pane.add(email, 0, 0);
         pane.add(emailField, 1, 0, 2, 1);
@@ -141,6 +117,91 @@ public class GUI extends Application {
         GridPane.setHalignment(submit, HPos.RIGHT);
         GridPane.setHalignment(back, HPos.RIGHT);
 
+        show.setCenter(pane);
+        display(show);
+    }
+
+    private void createAccount() {
+        GridPane pane = defGPane();
+        BorderPane show = new BorderPane();
+        VBox perm = new VBox(5);
+        perm.setPadding(new Insets(3, 3, 3, 3));
+
+        Operator operator = new Operator();
+
+        Label email = new Label("Username");
+        Label pass  = new Label("Password");
+        Label check = new Label("Confirm Password");
+
+        TextField emailField = new TextField();
+        PasswordField passField = new PasswordField();
+        PasswordField verify = new PasswordField();
+
+        StringBuilder permission = new StringBuilder("000");
+
+        Button submit = new Button("Submit");
+        submit.setOnAction(event -> {
+            operator.setType(emailField.getText());
+            operator.setCode(passField.getText());
+            operator.setPermissions(permission.toString());
+
+            if (!passField.getText().equals(verify.getText())){
+                JOptionPane.showMessageDialog(null, "Passwords do not match!", "Error", 0);
+            } else if (email.getText().equals("") || passField.getText().equals("")){
+                JOptionPane.showMessageDialog(null, "Blank spaces invalid!", "Error", 0);
+            } else if (Validation.copyCheck(machine, operator)){
+                machine.addOperator(operator);
+                String message = "Account Created!\nUsername: " + operator.getType();
+                JOptionPane.showMessageDialog(null, message,  "Account Created", 1);
+            } else {
+                JOptionPane.showMessageDialog(null, "Username taken!", "Error", 0);
+            }
+        });
+
+        Button clear  = new Button("Clear");
+        clear.setOnAction(event -> createAccount());
+
+        Image backArrow = new Image(getClass().getResourceAsStream("images/backArrow.png"));
+        Button back = new Button("", new ImageView(backArrow));
+        back.setOnAction(event -> userMenu());
+
+        Label heading = new Label("Permissions: ");
+        CheckBox create = new CheckBox("Create Account");
+        CheckBox add = new CheckBox("Add Product");
+        CheckBox remove = new CheckBox("Remove Money");
+
+        perm.getChildren().addAll(heading, create, add, remove);
+
+        EventHandler handler = event -> {
+                if (create.isSelected()){
+                    permission.setCharAt(0, '1');
+                }
+                if (add.isSelected()){
+                    permission.setCharAt(1, '1');
+                }
+                if(remove.isSelected()){
+                    permission.setCharAt(2, '1');
+                }
+            };
+
+        create.setOnAction(handler);
+        add.setOnAction(handler);
+        remove.setOnAction(handler);
+
+        pane.add(email, 0, 0);
+        pane.add(emailField, 1, 0, 2, 1);
+        pane.add(pass, 0, 1);
+        pane.add(passField, 1, 1, 2, 1);
+        pane.add(check, 0, 2);
+        pane.add(verify, 1, 2, 2, 1);
+        pane.add(submit, 2, 3);
+        pane.add(clear, 1, 3);
+        pane.add(back, 0, 3);
+
+        GridPane.setHalignment(submit, HPos.RIGHT);
+        GridPane.setHalignment(back, HPos.RIGHT);
+
+        show.setRight(perm);
         show.setLeft(pane);
         display(show);
     }
@@ -157,7 +218,7 @@ public class GUI extends Application {
         admin.setOnAction(event -> adminLogin());
         bar.getItems().add(admin);
 
-        if (isAdmin) bar = showAdmin();
+        if (!currentUser.getPermissions().equals("000")) bar = showAdmin();
 
         Label message = new Label("What would you like to do?\n");
         message.setStyle("-fx-font-size: 2em; ");
@@ -373,11 +434,14 @@ public class GUI extends Application {
 
         Image gear = new Image(getClass().getResourceAsStream("images/gear.png"));
         Button admin = new Button("Logout", new ImageView(gear));
-        admin.setOnAction(event -> {isAdmin = false; userMenu();});
+        admin.setOnAction(event -> {
+            currentUser = machine.getOperators().get(0);
+            userMenu();
+        });
 
         Button create = new Button("Create Account");
         if (currentUser.canCreateAccount()) {
-            create.setOnAction(event -> { isCreate = true; adminLogin(); });
+            create.setOnAction(event -> createAccount());
         } else {
             create.setStyle("-fx-background-color: #797979");
         }
