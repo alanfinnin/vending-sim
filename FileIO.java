@@ -6,7 +6,6 @@ public class FileIO
 	*	Checks the files essencial files for 
 	*	the operation and creates them if they 
 	*	are not 
-	*	@return void 
 	*/
 	public static void fileCheck()
 	{
@@ -33,7 +32,6 @@ public class FileIO
 	*	Checks the files essencial files for 
 	*	the operation and creates them if they 
 	*	are not 
-	*	@return void 
 	*/
 	public static boolean checkImages()
 	{
