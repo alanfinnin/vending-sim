@@ -25,7 +25,9 @@ public class FileIO
 				adminFile.createNewFile();
 		}
 		catch(IOException e)
-		{}
+		{
+			System.out.println("File Error");
+		}
 	}
 	/**
 	*	Checks the files essencial files for 
