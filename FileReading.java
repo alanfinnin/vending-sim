@@ -3,7 +3,8 @@ import java.io.*;
 public class FileReading extends FileIO
 {	
 	private String line;
-	private String[] lines;	
+	private String[] lines;
+	private static ArrayList<CoinLine> defaultSet = new ArrayList<CoinLine>();
 	/**
 	*	Takes products from the files
 	*	then puts them in an arraylist for 
@@ -41,11 +42,18 @@ public class FileReading extends FileIO
 	*/
 	public CoinSet readFromMoneyFile() throws IOException
 	{
+		defaultSet.add(new CoinLine(0.05, "5 Cent", 0));
+		defaultSet.add(new CoinLine(0.10, "10 Cent", 0));
+		defaultSet.add(new CoinLine(0.20, "20 Cent", 0));
+		defaultSet.add(new CoinLine(0.50, "50 Cent", 0));
+		defaultSet.add(new CoinLine(1.00, "1 Euro", 0));
+		defaultSet.add(new CoinLine(2.00, "2 Euro", 0));
 		String coinDescription;
 		double value;
 		int coinQuantity;
-		ArrayList<CoinLine> coinSetArrayList;
-		coinSetArrayList = new ArrayList<CoinLine>();
+		CoinSet coinSetList;
+		coinSetList = new CoinSet();
+		ArrayList<CoinLine> coinSetArrayList = coinSetList.getSetOfCoins();
 		CoinSet set = new CoinSet();
 		File moneyFile = new File("Money.txt");
 		Scanner in = new Scanner(moneyFile);
@@ -68,6 +76,9 @@ public class FileReading extends FileIO
 		for(int i = 0; i < coinSetArrayList.size(); i++)
 			if(!(set.getSetOfCoins().contains(coinSetArrayList.get(i))))
 				set.addCoin(coinSetArrayList.get(i));
+		for(int i = 0; i < defaultSet.size(); i++)
+				if(!(set.getSetOfCoins().contains(defaultSet.get(i))))
+				set.addCoin(defaultSet.get(i));
 		return set;//coinSet
 	}
 	/**
