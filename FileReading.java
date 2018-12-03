@@ -32,7 +32,13 @@ public class FileReading extends FileIO
 			}
 		}
 		catch(IOException e)
-		{}//Leaving the caught exception blank means the problematic line is simply skipped
+		{
+				System.out.println("IOException in stock file\n" + e)
+		}
+		catch(Exception e)
+		{
+			System.out.println("Error in readFromStockFile\n" + e);
+		}
 		return products;
 	}
 	/**
@@ -71,7 +77,13 @@ public class FileReading extends FileIO
 			}
 		}
 		catch(IOException e)
-		{}//Leaving the caught exception blank means the problematic line is simply skipped
+		{
+				System.out.println("IOException in readFromStockFile\n" + e);
+		}
+		catch(Exception e)
+		{
+			System.out.println("Error in readFromStockFile\n" + e);
+		}
 		set.addSetOfCoins(coinSetArrayList);
 		for(int i = 0; i < coinSetArrayList.size(); i++)
 			if(!(set.getSetOfCoins().contains(coinSetArrayList.get(i))))
@@ -106,7 +118,13 @@ public class FileReading extends FileIO
 			}
 		}
 		catch(IOException e)
-		{}//Leaving the caught exception blank means the problematic line is simply skipped
+		{
+			System.out.println("IOError in readFromStockFile\n" + e);
+		}
+		catch(Exception e)
+		{
+			System.out.println("Error in readFromStockFile\n" + e);
+		}
 		if(operators.size() == 0)
 		{
 			operators.add(new Operator("User", "0000", "000"));
