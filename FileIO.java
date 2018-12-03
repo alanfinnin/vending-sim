@@ -8,19 +8,24 @@ public class FileIO
 	*	are not 
 	*	@return void 
 	*/
-	public static void fileCheck() throws IOException
+	public static void fileCheck()
 	{
-		File stockFile = new File("Stock.txt");
-		if(!(stockFile.exists()))
-			stockFile.createNewFile();
-		
-		File moneyFile = new File("Money.txt");
-		if(!(moneyFile.exists()))
-			moneyFile.createNewFile();
-		
-		File adminFile = new File("Operators.txt");
-		if(!(adminFile.exists()))
-			adminFile.createNewFile();
+		try
+		{
+			File stockFile = new File("Stock.txt");
+			if(!(stockFile.exists()))
+				stockFile.createNewFile();
+			
+			File moneyFile = new File("Money.txt");
+			if(!(moneyFile.exists()))
+				moneyFile.createNewFile();
+			
+			File adminFile = new File("Operators.txt");
+			if(!(adminFile.exists()))
+				adminFile.createNewFile();
+		}
+		catch(IOException e)
+		{}
 	}
 	/**
 	*	Checks the files essencial files for 
@@ -28,7 +33,7 @@ public class FileIO
 	*	are not 
 	*	@return void 
 	*/
-	public static boolean checkImages() throws IOException
+	public static boolean checkImages()
 	{
 		boolean allFilesPresent = true;
 		File image1 = new File("images/5cent.png");
