@@ -2,7 +2,8 @@ import javax.swing.*;
 import java.util.ArrayList;
 
 /**
- * @author Stephen Cliffe
+This class contains all of the checks for the accounts to see if they are duplicated etc.
+ * @author Stephen Cliffe 17237157
  */
 class Validation {
 
