@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Operator {
+class Operator {
     private String type;
     private String code;
     private String permissions;
@@ -18,7 +18,7 @@ public class Operator {
     }
 
     public void setType(String t) {
-        t = type;
+        type = t;
     }
 
     public String getType() {
@@ -26,7 +26,7 @@ public class Operator {
     }
 
     public void setCode(String c) {
-        c = code;
+        code = c;
     }
 
     public String getCode() {
@@ -46,32 +46,19 @@ public class Operator {
     }
 
     public boolean canRemove() {
-        if(permissions.substring(2, 3).contains("1")) {
-            return true;
-        } else {
-            return false;
-        }
+        return permissions.substring(2, 3).contains("1");
     }
 
     public boolean canAddProduct() {
-        if(permissions.substring(1, 2).contains("1")) {
-            return true;
-        } else {
-            return false;
-        }
+        return permissions.substring(1, 2).contains("1");
     }
 
     public boolean canCreateAccount() {
-        if(permissions.substring(0, 1).contains("1")) {
-            return true;
-        } else {
-            return false;
-        }
+        return permissions.substring(0, 1).contains("1");
     }
 
     @Override
     public String toString() {
-        String op = type + "," + code + "," + permissions;
-        return op;
+        return type + "," + code + "," + permissions;
     }
 }
