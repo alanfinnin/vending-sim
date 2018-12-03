@@ -1,7 +1,6 @@
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
@@ -23,13 +22,14 @@ public class Window {
         stage.setTitle("Vending Machine Simulation");
         stage.setMinWidth(200);
         stage.setMinHeight(100);
-
-        stage.show();
+        stage.hide();
     }
 
     public void setPane(BorderPane pane){
         Scene scene = new Scene(pane);
         stage.setScene(scene);
+        this.centerWindow();
+        this.display();
     }
 
     public void display(){
@@ -54,4 +54,9 @@ public class Window {
         return pane;
     }
 
+    public void centerWindow(){
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+        stage.setX((screenBounds.getWidth() - stage.getWidth()) / 2);
+        stage.setY((screenBounds.getHeight() - stage.getHeight()) / 2);
+    }
 }

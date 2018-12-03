@@ -44,14 +44,13 @@ public class GUI extends Application {
     }
 
     /**
-     *
-     * @param primaryStage
+     * This declares the current user to be the default user with noe permissions. Also makes a new Window object.
+     * @param primaryStage an empty stage.
      */
     @Override
     public void start(Stage primaryStage){
         currentUser = new Operator("User", "0000", "000");
         window = new Window(primaryStage);
-        window.display();
         showHome();
     }
 
@@ -353,13 +352,12 @@ public class GUI extends Application {
             action.setOnAction(event -> {
                 try {
                     LineItem line = table.getSelectionModel().getSelectedItem();
-                    boolean bought = machine.buyProduct(line.getProduct());
-                    if (!bought){
-                        window.popup("Insufficient Funds!");
-                    }
+                    machine.buyProduct(line.getProduct());
                     showProducts();
                 } catch (NullPointerException e){
                     window.popup("No product selected!");
+                } catch (VendingException e){
+                    window.popup(e.toString());
                 }
             });
             action.setAlignment(Pos.CENTER_RIGHT);
