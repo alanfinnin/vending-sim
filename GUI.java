@@ -6,69 +6,43 @@ import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import javax.swing.*;
 import java.util.ArrayList;
 
+/**
+ * @author Stephen Cliffe
+ */
 public class GUI extends Application {
 
     private static Operator currentUser;
-    private Stage stage = new Stage();
+    private static VendingMachine machine;
+    private static Window window;
 
-    private boolean isAdmin = false;
-    private boolean isCreate = false;
     private boolean isAdding = false;
     private boolean isBuying = false;
 
-    private static VendingMachine machine;
-
-    /**
-     * The run() method initializes the GUI methods
-     */
-    public static void run(VendingMachine m){
-        currentUser = new Operator("User", "0000", "010");
-        machine = m;
-        launch();
+    static void run(VendingMachine vendingMachine){
+        machine = vendingMachine;
+        try {
+            launch();
+        } finally {
+            machine.saveAllToFiles();
+        }
     }
 
     @Override
     public void start(Stage primaryStage){
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("images/stage_vend_icon.png")));
-        stage.setTitle("Vending Machine Simulation");
-        stage.setMinHeight(150);
-        stage.setMinWidth(350);
-        userMenu();
-    }
-
-    /**
-     * This method takes a filled in GridPane and makes a window to display it. It closes the window
-     * that was previously opened. It adds an icon and a title to the window, then shows it.
-     * @param pane A filled in GridPane to be displayed.
-     */
-    private void display(BorderPane pane){
-        Scene scene = new Scene(pane);
-        stage.setScene(scene);
-        stage.centerOnScreen();
-        stage.show();
-    }
-
-    private GridPane defGPane(){
-        GridPane pane = new GridPane();
-        pane.setPadding(new Insets(10, 10, 10, 10));
-        pane.setVgap(5);
-        pane.setHgap(5);
-        pane.setAlignment(Pos.CENTER);
-
-        return pane;
+        currentUser = new Operator("User", "0000", "000");
+        window = new Window(primaryStage);
+        window.display();
+        showHome();
     }
 
     /**
@@ -77,58 +51,32 @@ public class GUI extends Application {
      * validates the data. The pane also contains a button that leads to the createAccount() method.
      */
     private void adminLogin() {
-        GridPane pane = defGPane();
+        GridPane pane = window.getDefaultGridPane();
         BorderPane show = new BorderPane();
 
-        Label email = new Label("Email");
+        Label email = new Label("Username");
         Label pass  = new Label("Password");
 
         TextField emailField = new TextField();
         PasswordField passField = new PasswordField();
 
         Button submit = new Button("Submit");
-        submit.setOnAction(event -> {isAdmin = true; userMenu();});
+        submit.setOnAction(event -> {
+            Operator op = Validation.loginCheck(machine, emailField.getText(), passField.getText());
+            if (!(op == null)){
+                currentUser = op;
+                showHome();
+            } else {
+                window.popup("Incorrect Username or Password!");
+            }
+        });
 
         Button clear  = new Button("Clear");
         clear.setOnAction(event -> adminLogin());
 
         Image backArrow = new Image(getClass().getResourceAsStream("images/backArrow.png"));
         Button back = new Button("", new ImageView(backArrow));
-        back.setOnAction(event -> userMenu());
-
-        if (isCreate){
-            VBox perm = new VBox(5);
-            perm.setPadding(new Insets(3, 3, 3, 3));
-
-            Label heading = new Label("Permissions: ");
-            CheckBox create = new CheckBox("Create Account");
-            CheckBox add = new CheckBox("Add Product");
-            CheckBox remove = new CheckBox("Remove Money");
-
-            perm.getChildren().addAll(heading, create, add, remove);
-
-            EventHandler handler = event -> {
-                if (create.isSelected()){
-
-                } else if (add.isSelected()){
-
-                } else if(remove.isSelected()){
-
-                }
-            };
-
-            create.setOnAction(handler);
-            add.setOnAction(handler);
-            remove.setOnAction(handler);
-
-            Label check = new Label("Confirm Password");
-            PasswordField verify = new PasswordField();
-
-            pane.add(check, 0, 2);
-            pane.add(verify, 1, 2, 2, 1);
-            show.setRight(perm);
-            isCreate = false;
-        }
+        back.setOnAction(event -> showHome());
 
         pane.add(email, 0, 0);
         pane.add(emailField, 1, 0, 2, 1);
@@ -141,15 +89,89 @@ public class GUI extends Application {
         GridPane.setHalignment(submit, HPos.RIGHT);
         GridPane.setHalignment(back, HPos.RIGHT);
 
+        show.setCenter(pane);
+        window.setPane(show);
+    }
+
+    private void createAccount() {
+        GridPane pane = window.getDefaultGridPane();
+        BorderPane show = new BorderPane();
+        VBox perm = new VBox(5);
+        perm.setPadding(new Insets(3, 3, 3, 3));
+
+        Label email = new Label("Username");
+        Label pass  = new Label("Password");
+        Label check = new Label("Confirm Password");
+
+        TextField emailField = new TextField();
+        PasswordField passField = new PasswordField();
+        PasswordField verify = new PasswordField();
+
+        StringBuilder permission = new StringBuilder("000");
+
+        Button clear  = new Button("Clear");
+        clear.setOnAction(event -> createAccount());
+
+        Image backArrow = new Image(getClass().getResourceAsStream("images/backArrow.png"));
+        Button back = new Button("", new ImageView(backArrow));
+        back.setOnAction(event -> showHome());
+
+        Button submit = new Button("Submit");
+        submit.setOnAction(event -> {
+            Operator op = Validation.accountCheck(machine, emailField.getText(), passField.getText(), verify.getText(), permission.toString());
+            if (!(op == null)){
+                machine.addOperator(op);
+                String message = "Account Created!\nUsername: " + op.getType();
+                window.popup(message, "Account Created", 1);
+            }
+        });
+
+        Label heading = new Label("Permissions: ");
+        CheckBox create = new CheckBox("Create Account");
+        CheckBox add = new CheckBox("Add Product");
+        CheckBox remove = new CheckBox("Remove Money");
+
+        perm.getChildren().addAll(heading, create, add, remove);
+
+        EventHandler handler = event -> {
+                if (create.isSelected()){
+                    permission.setCharAt(0, '1');
+                }
+                if (add.isSelected()){
+                    permission.setCharAt(1, '1');
+                }
+                if(remove.isSelected()){
+                    permission.setCharAt(2, '1');
+                }
+            };
+
+        create.setOnAction(handler);
+        add.setOnAction(handler);
+        remove.setOnAction(handler);
+
+        pane.add(email, 0, 0);
+        pane.add(emailField, 1, 0, 2, 1);
+        pane.add(pass, 0, 1);
+        pane.add(passField, 1, 1, 2, 1);
+        pane.add(check, 0, 2);
+        pane.add(verify, 1, 2, 2, 1);
+        pane.add(submit, 2, 3);
+        pane.add(clear, 1, 3);
+        pane.add(back, 0, 3);
+
+        GridPane.setHalignment(submit, HPos.RIGHT);
+        GridPane.setHalignment(back, HPos.RIGHT);
+
+        show.setRight(perm);
         show.setLeft(pane);
-        display(show);
+        window.setPane(show);
     }
 
     /**
      *
      */
-    private void userMenu(){
-        GridPane pane = defGPane();
+    private void showHome(){
+        GridPane pane = window.getDefaultGridPane();
 
         ToolBar bar = new ToolBar();
         Image gear = new Image(getClass().getResourceAsStream("images/gear.png"));
@@ -157,7 +179,7 @@ public class GUI extends Application {
         admin.setOnAction(event -> adminLogin());
         bar.getItems().add(admin);
 
-        if (isAdmin) bar = showAdmin();
+        if (!currentUser.getPermissions().equals("000")) bar = getAdminToolbar();
 
         Label message = new Label("What would you like to do?\n");
         message.setStyle("-fx-font-size: 2em; ");
@@ -193,11 +215,11 @@ public class GUI extends Application {
         show.setTop(bar);
         show.setCenter(pane);
 
-        display(show);
+        window.setPane(show);
     }
 
     private void chooseCoin(){
-        GridPane pane = defGPane();
+        GridPane pane = window.getDefaultGridPane();
 
         Image cent5 = new Image(getClass().getResourceAsStream("images/5cent.png"));
         Image cent10 = new Image(getClass().getResourceAsStream("images/cent10.png"));
@@ -211,7 +233,7 @@ public class GUI extends Application {
         Button ten = new Button("", new ImageView(cent10));
         ten.setOnAction(event -> {machine.addCoin(new Coin(0.1, "10 Cent")); chooseCoin();});
         Button twenty = new Button("", new ImageView(cent20));
-        twenty.setOnAction(event -> {machine.addCoin(new Coin(0.2, "20 cent")); chooseCoin();});
+        twenty.setOnAction(event -> {machine.addCoin(new Coin(0.2, "20 Cent")); chooseCoin();});
         Button fifty = new Button("", new ImageView(cent50));
         fifty.setOnAction(event -> {machine.addCoin(new Coin(0.5, "50 Cent")); chooseCoin();});
         Button euro = new Button("", new ImageView(euro1));
@@ -224,7 +246,7 @@ public class GUI extends Application {
 
         Image backArrow = new Image(getClass().getResourceAsStream("images/backArrow.png"));
         Button back = new Button("", new ImageView(backArrow));
-        back.setOnAction(event -> userMenu());
+        back.setOnAction(event -> showHome());
 
         String money = "\u20ac" + String.format("%.2f", machine.getCredit());
         Label credit = new Label(money);
@@ -245,11 +267,11 @@ public class GUI extends Application {
         BorderPane show = new BorderPane();
         show.setTop(pane);
         show.setBottom(row);
-        display(show);
+        window.setPane(show);
     }
 
     private void showProducts(){
-        GridPane pane = defGPane();
+        GridPane pane;
         BorderPane show = new BorderPane();
         HBox row = new HBox(40);
         row.setPadding(new Insets(10,10,10,10));
@@ -263,14 +285,15 @@ public class GUI extends Application {
         TableColumn<LineItem, Double> priceCol= new TableColumn<>("Price");
         TableColumn<LineItem, Integer>quantCol= new TableColumn<>("Quantity");
         nameCol.setMinWidth(175);
-        priceCol.setMinWidth(50);
-        quantCol.setMinWidth(50);
+        priceCol.setMinWidth(75);
+        quantCol.setMinWidth(75);
 
         nameCol.setCellValueFactory(cellData ->
                 new SimpleObjectProperty<>(cellData.getValue().getProduct().getDescription()));
         priceCol.setCellValueFactory(cellData ->
                 new SimpleObjectProperty<>(cellData.getValue().getProduct().getPrice()));
-        quantCol.setCellValueFactory(new PropertyValueFactory<>("Quantity"));
+        quantCol.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getQuantity()));
 
         ObservableList<LineItem> list = FXCollections.observableList(arr);
         table.setItems(list);
@@ -280,12 +303,12 @@ public class GUI extends Application {
         table.getColumns().add(quantCol);
 
         if (isAdding) {
-            pane = showAdd();
+            pane = getAddGrid();
             show.setCenter(pane);
         } else {
             Image backArrow = new Image(getClass().getResourceAsStream("images/backArrow.png"));
             Button back = new Button("", new ImageView(backArrow));
-            back.setOnAction(event -> {isAdding = false; isBuying = false; userMenu();});
+            back.setOnAction(event -> {isAdding = false; isBuying = false; showHome();});
 
             String money = "\u20ac" + String.format("%.2f", machine.getCredit());
             Label credit = new Label(money);
@@ -305,10 +328,11 @@ public class GUI extends Application {
                     LineItem line = table.getSelectionModel().getSelectedItem();
                     boolean bought = machine.buyProduct(line.getProduct());
                     if (!bought){
-                        JOptionPane.showMessageDialog(null, "Insufficient Funds!", "Error", JOptionPane.ERROR_MESSAGE);
+                        window.popup("Insufficient Funds!");
                     }
+                    showProducts();
                 } catch (NullPointerException e){
-                    JOptionPane.showMessageDialog(null, "No product selected!", "Error", JOptionPane.ERROR_MESSAGE);
+                    window.popup("No product selected!");
                 }
             });
             action.setAlignment(Pos.CENTER_RIGHT);
@@ -319,11 +343,11 @@ public class GUI extends Application {
         }
 
         show.setTop(table);
-        display(show);
+        window.setPane(show);
     }
 
-    public GridPane showAdd(){
-        GridPane pane = defGPane();
+    private GridPane getAddGrid(){
+        GridPane pane = window.getDefaultGridPane();
         Label text1 = new Label("Description");
         Label text2 = new Label("Price");
         Label text3 = new Label("Quantity");
@@ -344,7 +368,7 @@ public class GUI extends Application {
                 machine.addProduct(new Product(desc, price), quantity);
                 showProducts();
             } catch (Exception e){
-                JOptionPane.showMessageDialog(null, "Invalid input!", "Error", JOptionPane.ERROR_MESSAGE);
+                window.popup("Invalid input!");
             }
         });
 
@@ -360,24 +384,27 @@ public class GUI extends Application {
 
         Image backArrow = new Image(getClass().getResourceAsStream("images/backArrow.png"));
         Button back = new Button("", new ImageView(backArrow));
-        back.setOnAction(event -> {isAdding = false; isBuying = false; userMenu();});
+        back.setOnAction(event -> {isAdding = false; isBuying = false; showHome();});
 
         pane.add(back, 0, 3);
         GridPane.setHalignment(back, HPos.LEFT);
 
         return pane;
     }
-
-    public ToolBar showAdmin(){
+  
+    private ToolBar getAdminToolbar(){
         ToolBar bar = new ToolBar();
 
         Image gear = new Image(getClass().getResourceAsStream("images/gear.png"));
         Button admin = new Button("Logout", new ImageView(gear));
-        admin.setOnAction(event -> {isAdmin = false; userMenu();});
+        admin.setOnAction(event -> {
+            currentUser = machine.getOperators().get(0);
+            showHome();
+        });
 
         Button create = new Button("Create Account");
         if (currentUser.canCreateAccount()) {
-            create.setOnAction(event -> { isCreate = true; adminLogin(); });
+            create.setOnAction(event -> createAccount());
         } else {
             create.setStyle("-fx-background-color: #797979");
         }
@@ -393,7 +420,7 @@ public class GUI extends Application {
         if (currentUser.canRemove()) {
             remove.setOnAction(event -> {
                 String s = "You have removed: " + machine.removeMoney();
-                JOptionPane.showMessageDialog(null, s, "Money emptied!", 1);
+                window.popup(s, "Money removed!", 1);
             });
         } else {
             remove.setStyle("-fx-background-color: #797979");
