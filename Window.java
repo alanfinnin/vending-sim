@@ -23,6 +23,9 @@ public class Window {
         stage.setMinWidth(200);
         stage.setMinHeight(100);
         stage.hide();
+        stage.toFront();
+        stage.setResizable(false);
+        this.centerWindow();
     }
 
     public void setPane(BorderPane pane){

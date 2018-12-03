@@ -2,6 +2,7 @@ import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
  * This class file contains all the code for the JavaFX menus.
  * @author Stephen Cliffe
  */
+@SuppressWarnings("unchecked")
 public class GUI extends Application {
 
     private static Operator currentUser;
@@ -133,16 +135,6 @@ public class GUI extends Application {
         Button back = new Button("", new ImageView(backArrow));
         back.setOnAction(event -> showHome());
 
-        Button submit = new Button("Submit");
-        submit.setOnAction(event -> {
-            Operator op = Validation.accountCheck(machine, emailField.getText(), passField.getText(), verify.getText(), permission.toString());
-            if (!(op == null)){
-                machine.addOperator(op);
-                String message = "Account Created!\nUsername: " + op.getType();
-                window.popup(message, "Account Created", 1);
-            }
-        });
-
         Label heading = new Label("Permissions: ");
         CheckBox create = new CheckBox("Create Account");
         CheckBox add = new CheckBox("Add Product");
@@ -150,14 +142,14 @@ public class GUI extends Application {
 
         perm.getChildren().addAll(heading, create, add, remove);
 
-        EventHandler handler = event -> {
+        EventHandler<ActionEvent> handler = event -> {
                 if (create.isSelected()){
                     permission.setCharAt(0, '1');
                 }
-                if (add.isSelected()){
+                else if (add.isSelected()){
                     permission.setCharAt(1, '1');
                 }
-                if(remove.isSelected()){
+                else if(remove.isSelected()){
                     permission.setCharAt(2, '1');
                 }
             };
@@ -165,6 +157,17 @@ public class GUI extends Application {
         create.setOnAction(handler);
         add.setOnAction(handler);
         remove.setOnAction(handler);
+
+        Button submit = new Button("Submit");
+        submit.setOnAction(event -> {
+            Operator op = Validation.accountCheck(machine, emailField.getText(), passField.getText(), verify.getText(), permission.toString());
+            if (!(op == null)){
+                machine.addOperator(op);
+                String message = "Account Created!\nUsername: " + op.getType();
+                window.popup(message, "Account Created", 1);
+                showHome();
+            }
+        });
 
         pane.add(email, 0, 0);
         pane.add(emailField, 1, 0, 2, 1);
@@ -201,6 +204,21 @@ public class GUI extends Application {
         bar.getItems().add(admin);
 
         if (!currentUser.getPermissions().equals("000")) bar = getAdminToolbar();
+        else {
+            String message = "\u20ac" + String.format("%.2f", machine.getCredit());
+            Label change = new Label(message);
+            change.setStyle("-fx-font-size: 1.5em; ");
+
+            Button refund = new Button("Refund");
+            refund.setOnAction(event -> {
+                window.popup(machine.refundCoins(), "Refund", 1);
+                showHome();
+            });
+
+            Region region = new Region();
+            HBox.setHgrow(region, Priority.ALWAYS);
+            bar.getItems().addAll(refund, region, change);
+        }
 
         Label message = new Label("What would you like to do?\n");
         message.setStyle("-fx-font-size: 2em; ");
@@ -390,7 +408,10 @@ public class GUI extends Application {
                 String desc = field1.getText();
                 double price = Double.parseDouble(field2.getText());
                 int quantity = Integer.parseInt(field3.getText());
-                machine.addProduct(new Product(desc, price), quantity);
+
+                if (price < 0) window.popup("Price less than \u20ac0!");
+                else machine.addProduct(new Product(desc, price), quantity);
+
                 showProducts();
             } catch (Exception e){
                 window.popup("Invalid input!");
