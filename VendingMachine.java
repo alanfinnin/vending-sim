@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -8,14 +7,13 @@ class VendingMachine {
 	private CoinSet coins; //the total machine balance of coins
 	private CoinSet currentCoins; //the user coins currently held in machine credit
 	private ArrayList<LineItem> stock;
-	private Operator currentOperator;
 	private ArrayList<Operator> operators;
 	private FileWriting fileOutput;
 	private FileReading fileInput;
 
 	/**
 	 * Constructs the vending machine and initialises the list of stock
-	 * and the set of coins
+	 * and the set of coins. Populates arraylists from files
 	 */
 	VendingMachine()  {
 		FileIO.fileCheck();
@@ -25,7 +23,6 @@ class VendingMachine {
 		coins = fileInput.readFromMoneyFile();
 		operators = fileInput.readFromOperatorsFile();
 		currentCoins = new CoinSet();
-		initialiseOperators();
 	}
 
 	/**
@@ -96,7 +93,9 @@ class VendingMachine {
 	}
 
 	/**
-	 * @return
+	 * Allows a user to refund coins that have been input. Clears credit
+	 *
+	 * @return refundedAmount A String that contains all the refunded coin names and quantity
 	 */
 	String refundCoins() {
 		String refundedAmount = "No coins returned";
@@ -105,7 +104,7 @@ class VendingMachine {
 			ArrayList<CoinLine> tempCoinLines = currentCoins.getSetOfCoins();
 			for(CoinLine cl : tempCoinLines) {
 				if(cl.getQuantity() > 0)
-					refundedAmount += cl.getCoin().getName() + "\n";
+					refundedAmount += cl.getCoin().getName() + " x " + cl.getQuantity() + "\n";
 			}
 			currentCoins.clearCoinSet();
 		}
@@ -142,6 +141,7 @@ class VendingMachine {
 	 * @param p Product to buy
 	 * @return successful purchase
 	 * @throws VendingException Insufficient Credit
+	 * @throws VendingException Insufficient Stock
 	 */
 	boolean buyProduct(Product p) throws VendingException {
 		double currentCredit = currentCoins.getValue();
@@ -181,7 +181,6 @@ class VendingMachine {
 				break;
 			}
 		}
-		//Note to self: this is outside the foreach loop to prevent concurrent exception thingys
 		if (!found) {
 			LineItem item = new LineItem(newProduct, quantity);
 			stock.add(item);
@@ -189,29 +188,43 @@ class VendingMachine {
 		saveAllToFiles();
 	}
 
-	void addProduct(String description, double price, int quantity) {
-		addProduct(new Product(description, price), quantity);
-	}
-
+	/**
+	 * Returns an arraylist of operators
+	 * 
+	 * @return Operators Arraylist of Operators
+	 */
 	ArrayList<Operator> getOperators() {
 		return operators;
 	}
 
-	private void initialiseOperators() {
-		currentOperator = operators.get(0);
-	}
-
+	/**
+	 * Adds a new operator to the arraylist
+	 * then saves to file
+	 * 
+	 * @param op Operator to add
+	 */
 	void addOperator(Operator op) {
 		operators.add(op);
 		saveAllToFiles();
 	}
 
-	void addOperator(String type, String code, String permissions) {
-		Operator newOp = new Operator(type, code, permissions);
+	/**
+	 * Adds a new operator to the arraylist
+	 * then saves to file
+	 * 
+	 * @param user Username
+	 * @param code Access code
+	 * @param permissions A string of bits to denote what permissions are enables
+	 */
+	void addOperator(String user, String code, String permissions) {
+		Operator newOp = new Operator(user, code, permissions);
 		operators.add(newOp);
 		saveAllToFiles();
 	}
 
+	/**
+	 * Saves all the contents of the arraylists to files
+	 */
 	void saveAllToFiles() {
 		fileOutput.fromArrayListToFiles(stock, coins, operators);
 	}
