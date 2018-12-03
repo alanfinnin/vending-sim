@@ -113,9 +113,9 @@ class CoinSet {
 	}
 
 	/**
+	 * Gets the arraylist of coins that the machine can accept
 	 *
-	 *
-	 * @return
+	 * @return Arraylist of acceptable coins
 	 */
 	ArrayList<Coin> getAcceptedCoins() {
 		ArrayList<Coin> acceptableCoins = new ArrayList<>();
@@ -125,10 +125,20 @@ class CoinSet {
 		return acceptableCoins;
 	}
 
+	/**
+	 * Gets how many coinlines are in the coinset
+	 *
+	 * @return Size of coinset
+	 */
 	public int size() {
 		return set.size();
 	}
 
+	/**
+	 * Overrides the default toString for coinset
+	 *
+	 * @return All the coinlines in the coinset
+	 */
 	@Override
 	public String toString() {
 		String output = "";
@@ -138,4 +148,3 @@ class CoinSet {
 		return output;
 	}
 }
-
