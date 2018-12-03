@@ -41,6 +41,10 @@ public class FileWriting extends FileIO
 		}
 		catch(IOException e)
 		{
+			System.out.println("IOException in stockToFile\n" + e);
+		}
+		catch(IOException e)
+		{
 			System.out.println("Error in stockToFile\n" + e);
 		}
 	}
@@ -61,6 +65,10 @@ public class FileWriting extends FileIO
 				writer.write(moneySet.get(i).toString() + "\r\n");
 			writer.flush();
 			writer.close();
+		}
+		catch(IOException e)
+		{
+			System.out.println("IOException in moneyToFile\n" + e);
 		}
 		catch(IOException e)
 		{
@@ -86,7 +94,11 @@ public class FileWriting extends FileIO
 		}
 		catch(IOException e)
 		{
-				System.out.println("Error in operatorsToFile\n" + e);
+				System.out.println("IOException in operatorsToFile\n" + e);
+		}
+		catch(IOException e)
+		{
+			System.out.println("Error in operatorsToFile\n" + e);
 		}
 	}
 }
