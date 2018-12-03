@@ -25,7 +25,11 @@ public class FileIO
 		}
 		catch(IOException e)
 		{
-			System.out.println("File Error");
+			System.out.println("IOException in fileCheck\n" + e);
+		}
+		catch(Exception e)
+		{
+			System.out.println("Exception in fileCheck\n" + e);
 		}
 	}
 	/**
