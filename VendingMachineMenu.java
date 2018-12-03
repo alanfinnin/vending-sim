@@ -2,6 +2,7 @@ import java.util.Scanner;
 
 /**
  * A menu from the vending machine.
+ * @author Daniel Dalton 17219477
  */
 
 class VendingMachineMenu {
