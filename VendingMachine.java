@@ -17,7 +17,7 @@ class VendingMachine {
 	 * Constructs the vending machine and initialises the list of stock
 	 * and the set of coins
 	 */
-	VendingMachine() throws IOException {
+	VendingMachine()  {
 		FileIO.fileCheck();
 		fileInput = new FileReading();
 		fileOutput = new FileWriting();
@@ -114,15 +114,11 @@ class VendingMachine {
 	 * @return Amount Removed
 	 */
 	double removeMoney() {
-		System.out.println("remove money" + currentOperator.canRemove());
-		if (currentOperator.canRemove()) {
-			double amountRemoved = coins.getValue();
-			System.out.println(coins.getValue());
-			coins.clearCoinSet();
-			saveAllToFiles();
-			return amountRemoved;
-		}
-		return 0;
+		double amountRemoved = coins.getValue();
+		System.out.println(coins.getValue());
+		coins.clearCoinSet();
+		saveAllToFiles();
+		return amountRemoved;
 	}
 
 	/**
@@ -213,10 +209,6 @@ class VendingMachine {
 	}
 
 	void saveAllToFiles() {
-		try { //move the try catch to alans stuff
-			fileOutput.fromArrayListToFiles(stock, coins, operators);
-		} catch (IOException iox) {
-			System.out.println("Failed to save files, Reason:\n" + iox.toString());
-		}
+		fileOutput.fromArrayListToFiles(stock, coins, operators);
 	}
 }
