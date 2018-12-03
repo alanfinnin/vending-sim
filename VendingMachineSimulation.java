@@ -12,7 +12,8 @@ public class VendingMachineSimulation {
 
     /**
      * This method creates the vending machine and vending machine menu object
-     * and runs interfaceChoice() to either run the menus in CLI or GUI form
+     * and runs interfaceChoice() to either run the menus in CLI or GUI form.
+     * If the images folder is missing any images the GUI will not run.
      * @throws IOException
      */
     public static void run() throws IOException{
@@ -23,7 +24,11 @@ public class VendingMachineSimulation {
         if (choice == 1){
             menu.run(machine);
         } else if (choice == 2){
-            GUI.run(machine);
+            if (FileIO.checkImages()) GUI.run(machine);
+            else{
+                System.out.println("Missing images!");
+                run();
+            }
         } else {
             System.out.println("Invalid input!");
             run();
