@@ -1,8 +1,5 @@
 import java.util.*;
 import java.io.*;
-	/**
-	* @author Alan Finnin
-	*/
 public class FileReading extends FileIO
 {	
 	private String line;
@@ -61,7 +58,7 @@ public class FileReading extends FileIO
 		File moneyFile = new File("Money.txt");
 		try
 		{
-			Scanner in = new Scanner(moneyFile);
+            Scanner in = new Scanner(moneyFile);
 			while(in.hasNextLine())
 			{
 				lines = in.nextLine().split(",");
@@ -96,7 +93,7 @@ public class FileReading extends FileIO
 		File operatorsFile = new File("Operators.txt");
 		try
 		{
-			Scanner in = new Scanner(operatorsFile);
+            Scanner in = new Scanner(operatorsFile);
 			while(in.hasNextLine())
 			{
 				lines = in.nextLine().split(",");
@@ -105,11 +102,17 @@ public class FileReading extends FileIO
 				type = lines[0];
 				code = lines[1];
 				permissions = lines[2];
-				operators.add(new Operator(type , code, permissions));
+					operators.add(new Operator(type , code, permissions));
 			}
 		}
 		catch(Exception e)
 		{}//Leaving the caught exception blank means the problematic line is simply skipped
+		if(operators.size() == 0)
+		{
+			operators.add(new Operator("User", "0000", "000"));
+			operators.add(new Operator("Create", "0000", "110"));
+			operators.add(new Operator("Remove", "1111", "001"));
+		}
 		return operators;
 	}
 }
