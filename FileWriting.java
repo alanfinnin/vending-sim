@@ -27,7 +27,7 @@ public class FileWriting extends FileIO
 	/**
 	*	Saves products from an lineItem
 	*	arraylist to file using a FileWriter
-	*	@param LineItem the stock arraylist, taken in to be saved
+	*	@param stock the stock arraylist, taken in to be saved
 	*	@return void
 	*/
 	public void stockToFile(ArrayList<LineItem> stock) throws IOException
