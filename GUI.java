@@ -2,8 +2,6 @@ import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -142,25 +140,19 @@ public class GUI extends Application {
 
         perm.getChildren().addAll(heading, create, add, remove);
 
-        EventHandler<ActionEvent> handler = event -> {
-                if (create.isSelected()){
-                    permission.setCharAt(0, '1');
-                }
-                else if (add.isSelected()){
-                    permission.setCharAt(1, '1');
-                }
-                else if(remove.isSelected()){
-                    permission.setCharAt(2, '1');
-                }
-            };
-
-        create.setOnAction(handler);
-        add.setOnAction(handler);
-        remove.setOnAction(handler);
-
         Button submit = new Button("Submit");
         submit.setOnAction(event -> {
+            if (create.isSelected()){
+                permission.setCharAt(0, '1');
+            }
+            else if (add.isSelected()){
+                permission.setCharAt(1, '1');
+            }
+            else if(remove.isSelected()){
+                permission.setCharAt(2, '1');
+            }
             Operator op = Validation.accountCheck(machine, emailField.getText(), passField.getText(), verify.getText(), permission.toString());
+
             if (!(op == null)){
                 machine.addOperator(op);
                 String message = "Account Created!\nUsername: " + op.getType();
@@ -367,6 +359,7 @@ public class GUI extends Application {
 
         if (isBuying){
             Button action = new Button("Buy");
+            action.setStyle("-fx-font-size: 1.3em; ");
             action.setOnAction(event -> {
                 try {
                     LineItem line = table.getSelectionModel().getSelectedItem();
