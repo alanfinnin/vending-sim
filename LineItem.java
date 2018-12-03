@@ -52,6 +52,13 @@ class LineItem {
 			this.quantity--;
 	}
 
+    /**
+     * Checks whether a LineItem is equals by checking whether the products are equal
+     * Overrides the built in equals
+     *
+     * @param o object to check against this
+     * @return boolean of whether its equal
+     */
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof LineItem) {
@@ -61,6 +68,11 @@ class LineItem {
 			return false;
 	}
 
+    /**
+     * Overrides the default toString for lineItem
+     *
+     * @return description,price,quantity
+     */
 	@Override
 	public String toString() {
 		return product.toString() + "," + quantity;
