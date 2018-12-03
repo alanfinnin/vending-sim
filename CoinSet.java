@@ -27,13 +27,17 @@ class CoinSet {
 	 *
 	 * @param coin
 	 */
-	void addCoin(Coin coin) {
+	void addCoin(CoinLine coinLine) {
+		boolean found = false;
 		for (CoinLine cl : set) {
-			if (coin.equals(cl.getCoin())) {
-				cl.addQuantity(1);
+			if ((coinLine.getCoin()).equals(cl.getCoin())) {
+				cl.addQuantity(coinLine.getQuantity());
+				found = true;
 				break;
 			}
 		}
+		if (!found)
+			set.add(coinLine);
 	}
 
 	/**
