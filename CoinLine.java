@@ -1,3 +1,7 @@
+/**
+ * A wrapper for coin to include quantities
+ * @author Daniel Dalton 17219477
+ */
 class CoinLine {
 	private Coin coin;
 	private int quantity;
@@ -7,7 +11,7 @@ class CoinLine {
 	 * Initialises the ArrayList
 	 * 
 	 * @param coin Coin
-	 * @param quantity Quantity of coins   
+	 * @param quantity Quantity of coins
 	 */
 	CoinLine(Coin coin, int quantity) {
 		this.coin = coin;
@@ -17,7 +21,7 @@ class CoinLine {
 	/**
 	 * Constructs a coin object.
 	 * Initialises the ArrayList
-	 * 
+	 *
 	 * @param value Value of coin
 	 * @param description Description of coin
 	 * @param quantity Quantity of coins
@@ -45,7 +49,7 @@ class CoinLine {
 
 	/**
 	 * Getter to retrieve quantity from coinLine
-	 * 
+	 *
 	 * @return Quantity
 	 */
 	int getQuantity() {
@@ -54,7 +58,7 @@ class CoinLine {
 
 	/**
 	 * Getter to retrieve coin from coinLine
-	 * 
+	 *
 	 * @return Coin
 	 */
 	Coin getCoin() {
@@ -88,7 +92,7 @@ class CoinLine {
 	 * Overrides the default toString for product
 	 * returns the name of the product
 	 *
-	 * @return name,value,quantity 
+	 * @return name,value,quantity
 	 */
 	@Override
 	public String toString() {
