@@ -1,31 +1,19 @@
 import java.util.*;
 import java.io.*;
 public class FileReading extends FileIO
-{
-	private double price;
-	private String description;
-	private int quantity;
-	
-	private String coinDescription;
-	private double value;
-	private int coinQuantity;
-	private ArrayList<CoinLine> coinSetArrayList;
-		
-	private String type;
-	private String code;
-	private String permissions;
-	
-	
+{	
 	private String line;
-	private String[] lines;
-	
+	private String[] lines;	
 	/**
 	*	Takes products from the files
 	*	then puts them in an arraylist for 
-	*	return
+	*	@return readFromStockFile
 	*/
 	public ArrayList readFromStockFile() throws IOException
 	{
+		double price;
+		String description;
+		int quantity;
 		ArrayList<LineItem> products = new ArrayList<LineItem>();
 		File stockFile = new File("Stock.txt");
 		Scanner in = new Scanner(stockFile);
@@ -43,16 +31,20 @@ public class FileReading extends FileIO
 			}
 		}
 		catch(Exception e)
-		{}
+		{}//Leaving the caught exception blank means the problematic line is simply skipped
 		return products;
 	}
 	/**
-	*	Pulls money from the file and should put 
-	*	it in a coinSet to be returned, currently 
-	*	broken, will fix
+	*	Pulls money from the file and puts 
+	*	it in a coinSet to be returned
+	*	@return readFromMoneyFile
 	*/
 	public CoinSet readFromMoneyFile() throws IOException
 	{
+		String coinDescription;
+		double value;
+		int coinQuantity;
+		ArrayList<CoinLine> coinSetArrayList;
 		coinSetArrayList = new ArrayList<CoinLine>();
 		CoinSet set = new CoinSet();
 		File moneyFile = new File("Money.txt");
@@ -71,7 +63,7 @@ public class FileReading extends FileIO
 			}
 		}
 		catch(Exception e)
-		{}
+		{}//Leaving the caught exception blank means the problematic line is simply skipped
 		set.addSetOfCoins(coinSetArrayList);
 		for(int i = 0; i < coinSetArrayList.size(); i++)
 			if(!(set.getSetOfCoins().contains(coinSetArrayList.get(i))))
@@ -81,9 +73,11 @@ public class FileReading extends FileIO
 	/**
 	*	Pulls the info from the operators file,
 	*	puts them in an arraylist then returns it
+	*	@return readFromOperatorsFile
 	*/
 	public ArrayList readFromOperatorsFile() throws IOException
-	{
+	{		
+		String type, code, permissions;
 		ArrayList<Operator> operators = new ArrayList<Operator>();
 		File operatorsFile = new File("Operators.txt");
 		Scanner in = new Scanner(operatorsFile);
@@ -101,7 +95,7 @@ public class FileReading extends FileIO
 			}
 		}
 		catch(Exception e)
-		{}
+		{}//Leaving the caught exception blank means the problematic line is simply skipped
 		return operators;
 	}
 }
