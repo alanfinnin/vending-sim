@@ -22,7 +22,7 @@ public class Product {
 	 *
 	 * @return Description
 	 */
-	public String getDescription() {
+	String getDescription() {
 		return description;
 	}
 
@@ -31,7 +31,7 @@ public class Product {
 	 *
 	 * @return Selling price
 	 */
-	public double getPrice() {
+	double getPrice() {
 		return price;
 	}
 
@@ -40,7 +40,7 @@ public class Product {
 	 *
 	 * @param price selling price
 	 */
-	public void setPrice(double price) {
+	void setPrice(double price) {
 		this.price = price;
 	}
 
