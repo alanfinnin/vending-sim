@@ -51,6 +51,11 @@ class VendingMachineMenu {
 		}
 	}
 
+    /**
+     * Displays an Admin menu with options dependant on the permission of the operator logged in
+     * Allows them perform admin functions on the machine.
+     * @param machine Vending Machine
+     */
 	private void adminMenu(VendingMachine machine) {
 		boolean more = true;
 		boolean canAddProduct= currentOperator.canAddProduct();
@@ -110,6 +115,11 @@ class VendingMachineMenu {
 		}
 	}
 
+    /**
+     * Prompts the operator for user and code to allow access to admin menu stuff
+     *
+     * @param machine
+     */
 	private void login(VendingMachine machine) {
 		System.out.println("User: ");
 		String type = in.nextLine();
@@ -124,8 +134,15 @@ class VendingMachineMenu {
 			System.out.println("Successfully logged in as: " + type);
 			adminMenu(machine);
 		}
-	}
+}
 
+    /**
+     * Takes in an array of object and returns the chosen object as defined by the letter typed
+     *
+     * @param choices An object array of possible choices
+     * @return Object that is chosen
+     * @throws StringIndexOutOfBoundsException when there is no choices
+     */
 	private Object getChoice(Object[] choices) throws StringIndexOutOfBoundsException {
 		while (true) {
 			char c = 'A';
