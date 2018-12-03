@@ -1,57 +1,57 @@
+/**
+ * A wrapper for product that contains quantity
+ * @author Daniel Dalton 17219477
+ */
 class LineItem {
 	private Product product;
 	private int quantity;
-	/**
-		* A LineItem
-		*/
+
+    /**
+     * Constructs a lineItem with a given product and quantity
+     *
+     * @param prod Product
+     * @param quantity Quantity of said product
+     */
 	LineItem(Product prod, int quantity) {
 		this.product = prod;
 		this.quantity = quantity;
 	}
-	/**
-	 * Constructs a LineItem with a given description, price and quantity
-	 
-	 * @param description
-	 * @param price
-	 * @param quantity
-	 */
-	LineItem(String description, double price, int quantity) {
-		this.product = new Product(description, price);
-		this.quantity = quantity;
-	}
-	/**
-	 * Returns the product
-	 *
-	 * @return product
-	 */
+
+    /**
+     * Getter for retrieving product from this lineItem
+     *
+     * @return Product
+     */
 	public Product getProduct() {
 		return product;
 	}
-	/**
-	 * Returns the quantity
-	 *
-	 * @return quantity
-	 */
+
+    /**
+     * Getter for retrieving quantity
+     * 
+     * @return
+     */
 	public int getQuantity() {
 		return quantity;
 	}
-	/**
-	 * Sets the quantity
-	 *
-	 * @param quantity
-	 */
+
+    /**
+     * Setter for setting quantity
+     * 
+     * @param quantity Quantity of products
+     */
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	/**
-	 * Decrements the quantity
-	 *
-	 */
+
+    /**
+     * Decrement quantity by 1 if quantity is greater than 0
+     */
 	public void decrementQuantity() {
 		if (quantity >= 1)
 			this.quantity--;
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof LineItem) {
@@ -66,4 +66,3 @@ class LineItem {
 		return product.toString() + "," + quantity;
 	}
 }
-
