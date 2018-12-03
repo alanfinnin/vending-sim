@@ -12,7 +12,6 @@ class CoinSet {
 	 */
 	CoinSet() {
 		set = new ArrayList<>();
-		//this is temporary, alans readfile called here for money
 		set.add(new CoinLine(0.05, "5 Cent", 0));
 		set.add(new CoinLine(0.10, "10 Cent", 0));
 		set.add(new CoinLine(0.20, "20 Cent", 0));
