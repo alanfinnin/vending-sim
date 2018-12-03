@@ -28,11 +28,16 @@ class CoinSet {
 	 * @param coin
 	 */
 	void addCoin(Coin coin) {
+		boolean exists = false;
 		for (CoinLine cl : set) {
 			if (coin.equals(cl.getCoin())) {
 				cl.addQuantity(1);
+				exists = true;
 				break;
 			}
+		}
+		if(!exists){
+			addCoin(new CoinLine(coin, 1));
 		}
 	}
 
