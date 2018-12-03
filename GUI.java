@@ -55,6 +55,77 @@ public class GUI extends Application {
     }
 
     /**
+     * This method displays a menu that has access to all other menus, a home screen. It contains four buttons available
+     * to all users, login, to log into an account, show products, to display all products in the machine, insert coins,
+     * to put coins into the machine and finally buy product, to buy a product. The menu contains a toolbar at the top
+     * of the BorderPane that contains all the admin tools. This will not display until logged in as an operator and each
+     * tool will only be available to an operator who has the correct permissions.
+     */
+    private void showHome(){
+        GridPane pane = window.getDefaultGridPane();
+
+        ToolBar bar = new ToolBar();
+        Image gear = new Image(getClass().getResourceAsStream("images/gear.png"));
+        Button admin = new Button("Login", new ImageView(gear));
+        admin.setOnAction(event -> adminLogin());
+        bar.getItems().add(admin);
+
+        if (!currentUser.getPermissions().equals("000")) bar = getAdminToolbar();
+        else {
+            String message = "\u20ac" + String.format("%.2f", machine.getCredit());
+            Label change = new Label(message);
+            change.setStyle("-fx-font-size: 1.5em; ");
+
+            Button refund = new Button("Refund");
+            refund.setOnAction(event -> {
+                window.popup(machine.refundCoins(), "Refund", 1);
+                showHome();
+            });
+
+            Region region = new Region();
+            HBox.setHgrow(region, Priority.ALWAYS);
+            bar.getItems().addAll(refund, region, change);
+        }
+
+        Label message = new Label("What would you like to do?\n");
+        message.setStyle("-fx-font-size: 2em; ");
+
+        Image bottle = new Image((getClass().getResourceAsStream("images/showIcon.png")));
+        Button display = new Button("", new ImageView(bottle));
+        display.setOnAction(event -> showProducts());
+        Label showProducts = new Label("Show Products");
+
+        Image coin = new Image((getClass().getResourceAsStream("images/coinIcon.png")));
+        Button insert = new Button("", new ImageView(coin));
+        insert.setOnAction(event -> chooseCoin());
+        Label addCoin = new Label("Insert Coin");
+
+        Image cart = new Image((getClass().getResourceAsStream("images/buyIcon.png")));
+        Button buy = new Button("", new ImageView(cart));
+        buy.setOnAction(event -> {isBuying = true; showProducts();});
+        Label buyProduct = new Label("Buy");
+
+        pane.add(message, 0, 0, 3, 1);
+        pane.add(display, 0, 2);
+        pane.add(insert, 1, 2);
+        pane.add(buy, 2, 2);
+        pane.add(showProducts, 0, 3);
+        pane.add(addCoin, 1, 3);
+        pane.add(buyProduct, 2, 3);
+
+        GridPane.setHalignment(showProducts, HPos.CENTER);
+        GridPane.setHalignment(addCoin, HPos.CENTER);
+        GridPane.setHalignment(buyProduct, HPos.CENTER);
+
+        BorderPane show = new BorderPane();
+        show.setTop(bar);
+        show.setCenter(pane);
+
+        window.setPane(show);
+    }
+
+
+    /**
      * adminLogin() creates a menu with a text field, a password field and three buttons. One to clear the fields, one
      * to return to previous screen and another to submit the inputted data for validation. If the test passes the
      * method sets the currentUser variable to be the one logged in, else it will output a JOptionPane saying incorrect
@@ -180,76 +251,6 @@ public class GUI extends Application {
     }
 
     /**
-     * This method displays a menu that has access to all other menus, a home screen. It contains four buttons available
-     * to all users, login, to log into an account, show products, to display all products in the machine, insert coins,
-     * to put coins into the machine and finally buy product, to buy a product. The menu contains a toolbar at the top
-     * of the BorderPane that contains all the admin tools. This will not display until logged in as an operator and each
-     * tool will only be available to an operator who has the correct permissions.
-     */
-    private void showHome(){
-        GridPane pane = window.getDefaultGridPane();
-
-        ToolBar bar = new ToolBar();
-        Image gear = new Image(getClass().getResourceAsStream("images/gear.png"));
-        Button admin = new Button("Login", new ImageView(gear));
-        admin.setOnAction(event -> adminLogin());
-        bar.getItems().add(admin);
-
-        if (!currentUser.getPermissions().equals("000")) bar = getAdminToolbar();
-        else {
-            String message = "\u20ac" + String.format("%.2f", machine.getCredit());
-            Label change = new Label(message);
-            change.setStyle("-fx-font-size: 1.5em; ");
-
-            Button refund = new Button("Refund");
-            refund.setOnAction(event -> {
-                window.popup(machine.refundCoins(), "Refund", 1);
-                showHome();
-            });
-
-            Region region = new Region();
-            HBox.setHgrow(region, Priority.ALWAYS);
-            bar.getItems().addAll(refund, region, change);
-        }
-
-        Label message = new Label("What would you like to do?\n");
-        message.setStyle("-fx-font-size: 2em; ");
-
-        Image bottle = new Image((getClass().getResourceAsStream("images/showIcon.png")));
-        Button display = new Button("", new ImageView(bottle));
-        display.setOnAction(event -> showProducts());
-        Label showProducts = new Label("Show Products");
-
-        Image coin = new Image((getClass().getResourceAsStream("images/coinIcon.png")));
-        Button insert = new Button("", new ImageView(coin));
-        insert.setOnAction(event -> chooseCoin());
-        Label addCoin = new Label("Insert Coin");
-
-        Image cart = new Image((getClass().getResourceAsStream("images/buyIcon.png")));
-        Button buy = new Button("", new ImageView(cart));
-        buy.setOnAction(event -> {isBuying = true; showProducts();});
-        Label buyProduct = new Label("Buy");
-
-        pane.add(message, 0, 0, 3, 1);
-        pane.add(display, 0, 2);
-        pane.add(insert, 1, 2);
-        pane.add(buy, 2, 2);
-        pane.add(showProducts, 0, 3);
-        pane.add(addCoin, 1, 3);
-        pane.add(buyProduct, 2, 3);
-
-        GridPane.setHalignment(showProducts, HPos.CENTER);
-        GridPane.setHalignment(addCoin, HPos.CENTER);
-        GridPane.setHalignment(buyProduct, HPos.CENTER);
-
-        BorderPane show = new BorderPane();
-        show.setTop(bar);
-        show.setCenter(pane);
-
-        window.setPane(show);
-    }
-
-    /**
      * The chooseCoin() method displays a menu containing six buttons, each displaying a coin image that represents the
      * desired input. It also has a count in the bottom right that displays the current value inside the machine. There
      * is a back button in the bottom right that returns you to the home screen.
@@ -306,6 +307,9 @@ public class GUI extends Application {
         window.setPane(show);
     }
 
+    /**
+     * The showProducts() method
+     */
     private void showProducts(){
         GridPane pane;
         BorderPane show = new BorderPane();
