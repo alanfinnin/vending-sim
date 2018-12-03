@@ -31,7 +31,7 @@ public class FileReading extends FileIO
 				products.add(new LineItem(new Product(description, price), quantity));
 			}
 		}
-		catch(Exception e)
+		catch(IOException e)
 		{}//Leaving the caught exception blank means the problematic line is simply skipped
 		return products;
 	}
@@ -70,7 +70,7 @@ public class FileReading extends FileIO
 				coinSetArrayList.add(new CoinLine(new Coin(value, coinDescription), coinQuantity)); //coinLine
 			}
 		}
-		catch(Exception e)
+		catch(IOException e)
 		{}//Leaving the caught exception blank means the problematic line is simply skipped
 		set.addSetOfCoins(coinSetArrayList);
 		for(int i = 0; i < coinSetArrayList.size(); i++)
@@ -105,7 +105,7 @@ public class FileReading extends FileIO
 					operators.add(new Operator(type , code, permissions));
 			}
 		}
-		catch(Exception e)
+		catch(IOException e)
 		{}//Leaving the caught exception blank means the problematic line is simply skipped
 		if(operators.size() == 0)
 		{
