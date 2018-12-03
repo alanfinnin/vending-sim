@@ -1,5 +1,6 @@
 /**
- * A coin
+ * A coin object with a name and value
+ * @author Daniel Dalton 17219477
  */
 public class Coin {
 	private double value;
@@ -34,6 +35,13 @@ public class Coin {
 		return name;
 	}
 
+	/**
+	 * Checks whether a coin is equals by checking whether the name and value are equal
+	 * Overrides the built in equals
+	 * 
+	 * @param o object to check against this
+	 * @return boolean of whether its equal
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof Coin) {
