@@ -8,6 +8,15 @@ public class FileWriting extends FileIO
 	*	The main and only public method avaliable
 	*	this uses the other private methods to
 	*	carry out the saving
+	*	@param stock arraylist of stock to be sent 
+	*	to the method stockToFile
+	*
+	*	@param money coinset to be sent to the
+	*	method moneyToFile
+	*
+	*	@param operators arraylist of operators 
+	*	to be sent to operatorsToFile
+	*	@return void
 	*/
 	public void fromArrayListToFiles(ArrayList<LineItem> stock, CoinSet money, ArrayList<Operator> operators) throws IOException
 	{
@@ -18,8 +27,10 @@ public class FileWriting extends FileIO
 	/**
 	*	Saves products from an lineItem
 	*	arraylist to file using a FileWriter
+	*	@param LineItem the stock arraylist, taken in to be saved
+	*	@return void
 	*/
-	private void stockToFile(ArrayList<LineItem> stock) throws IOException
+	public void stockToFile(ArrayList<LineItem> stock) throws IOException
 	{
 		File stockFile = new File("Stock.txt");
 		FileWriter writer = new FileWriter(stockFile);
@@ -31,8 +42,10 @@ public class FileWriting extends FileIO
 	/**
 	*	Saves money from a coinSet
 	*	to file using a FileWriter
+	*	@param money the holder for the coins to be saved 
+	*	@return void
 	*/
-	private void moneyToFile(CoinSet money) throws IOException
+	public void moneyToFile(CoinSet money) throws IOException
 	{
 		moneySet = new ArrayList<CoinLine>();
 		moneySet = money.getSetOfCoins();
@@ -47,8 +60,10 @@ public class FileWriting extends FileIO
 	*	Saves the operators from an arraylist
 	*	of String type to file using a 
 	*	FileWriter
+	*	@param operators the arraylist of operators to be saved
+	*	@return void 
 	*/
-	private void operatorsToFile(ArrayList<Operator> operators) throws IOException
+	public void operatorsToFile(ArrayList<Operator> operators) throws IOException
 	{
 		File operatorsFile = new File("Operators.txt");
 		FileWriter writer = new FileWriter(operatorsFile);
