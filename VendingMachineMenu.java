@@ -3,6 +3,7 @@ import java.util.Scanner;
 /**
  * A menu from the vending machine.
  */
+
 class VendingMachineMenu {
 	private Scanner in;
 	private Operator currentOperator;
@@ -134,6 +135,4 @@ class VendingMachineMenu {
 				return choices[n];
 		}
 	}
-
-
 }

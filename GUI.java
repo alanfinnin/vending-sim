@@ -391,7 +391,7 @@ public class GUI extends Application {
 
         return pane;
     }
-
+  
     private ToolBar getAdminToolbar(){
         ToolBar bar = new ToolBar();
 

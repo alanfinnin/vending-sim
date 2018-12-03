@@ -63,7 +63,7 @@ class CoinSet {
 	ArrayList<CoinLine> getSetOfCoins() {
 		return set;
 	}
-
+  
 	/**
 	 * Adds one coinset to another by checking for coins in common and adding the
 	 * quantity of the coins in the passed in coinset to the quantity in the current coinset

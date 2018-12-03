@@ -11,7 +11,8 @@ class CoinLine {
 		this.quantity = quantity;
 	}
 
-	public CoinLine(double value, String description, int quantity) {
+	public CoinLine(double value, String description, int quantity)
+	{
 		this.coin = new Coin(value, description);
 		this.quantity = quantity;
 	}
