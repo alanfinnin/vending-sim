@@ -24,14 +24,16 @@ class VendingMachineMenu {
 		boolean more = true;
 		Coin[] coins = machine.getAcceptableCoins();
 		while (more) {
-			System.out.println("S)how products I)nsert coin B)uy L)ogin Q)uit");
+			System.out.println("S)how products I)nsert coin B)uy " + (machine.getCredit() > 0 ? "R)efund " : "") + "L)ogin Q)uit");
 			String command = in.nextLine().toUpperCase();
 			if (command.equals("S")) {
 				System.out.println(machine.showProducts());
 			} else if (command.equals("I")) { //allows one coin be inserted at a time
 				machine.addCoin((Coin) getChoice(coins));
-			} else if (command.equals("L")) { //allows one coin be inserted at a time
+			} else if (command.equals("L")) {
 				login(machine);
+            } else if (command.equals("R")) {
+                System.out.println("Refunded: " + machine.refundCoins());
 			} else if (command.equals("B")) {
 				try {
 					Product p = (Product) getChoice(machine.getProductTypes());
@@ -51,10 +53,13 @@ class VendingMachineMenu {
 
 	private void adminMenu(VendingMachine machine) {
 		boolean more = true;
+		boolean canAddProduct= currentOperator.canAddProduct();
+		boolean canCreateOperator = currentOperator.canCreateAccount();
+		boolean canRemoveMoney = currentOperator.canRemove();
 		while (more) {
-			System.out.println("S)how products " + (currentOperator.canAddProduct() ? "A)dd product " : "") +
-					(currentOperator.canRemove() ? "R)emove coins " : "") +
-					(currentOperator.canCreateAccount() ? "C)reate account " : "") +
+			System.out.println("S)how products " + (canAddProduct ? "A)dd product " : "") +
+					(canRemoveMoney ? "R)emove coins " : "") +
+					(canCreateOperator ? "C)reate account " : "") +
 					"B)ack");
 			String command = in.nextLine().toUpperCase();
 			if (command.equals("S")) {
@@ -71,9 +76,8 @@ class VendingMachineMenu {
 				in.nextLine(); // read the new-line character
 				machine.addProduct(new Product(description, price), quantity);
 			} else if (command.equals("C") && currentOperator.canCreateAccount()) {
-				//todo create account stuff
 				String permissions = "";
-				System.out.println("Type: ");
+				System.out.println("User: ");
 				String type = in.nextLine();
 				System.out.println("Code: ");
 				String code = in.nextLine();
@@ -98,7 +102,7 @@ class VendingMachineMenu {
 				else
 					permissions += 0;
 
-				in.nextLine(); // read the new-line character
+				//in.nextLine(); // read the new-line character
 				machine.addOperator(type, code, permissions);
 			} else if (command.equals("B")) {
 				more = false;
