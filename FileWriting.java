@@ -16,7 +16,6 @@ public class FileWriting extends FileIO
 	*
 	*	@param operators arraylist of operators 
 	*	to be sent to operatorsToFile
-	*	@return void
 	*/
 	public void fromArrayListToFiles(ArrayList<LineItem> stock, CoinSet money, ArrayList<Operator> operators) 
 	{
@@ -28,7 +27,6 @@ public class FileWriting extends FileIO
 	*	Saves products from an lineItem
 	*	arraylist to file using a FileWriter
 	*	@param stock the stock arraylist, taken in to be saved
-	*	@return void
 	*/
 	public void stockToFile(ArrayList<LineItem> stock)
 	{
@@ -50,7 +48,6 @@ public class FileWriting extends FileIO
 	*	Saves money from a coinSet
 	*	to file using a FileWriter
 	*	@param money the holder for the coins to be saved 
-	*	@return void
 	*/
 	public void moneyToFile(CoinSet money)
 	{
@@ -75,7 +72,6 @@ public class FileWriting extends FileIO
 	*	of String type to file using a 
 	*	FileWriter
 	*	@param operators the arraylist of operators to be saved
-	*	@return void 
 	*/
 	public void operatorsToFile(ArrayList<Operator> operators) 
 	{
