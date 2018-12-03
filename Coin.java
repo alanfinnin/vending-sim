@@ -38,7 +38,7 @@ public class Coin {
 	/**
 	 * Checks whether a coin is equals by checking whether the name and value are equal
 	 * Overrides the built in equals
-	 * 
+	 *
 	 * @param o object to check against this
 	 * @return boolean of whether its equal
 	 */
@@ -55,7 +55,7 @@ public class Coin {
 	 * Overrides the default toString for coin
 	 * returns the name of the coin
 	 *
-	 * @return name
+	 * @return name,value
 	 */
 	public String toString() {
 		return name + "," + value;
