@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 
 /**
+ * This class file contains all the code for the JavaFX menus.
  * @author Stephen Cliffe
  */
 public class GUI extends Application {
@@ -28,6 +29,11 @@ public class GUI extends Application {
     private boolean isAdding = false;
     private boolean isBuying = false;
 
+    /**
+     * The run() method declares the VendingMachine object and launches the JavaFX menu. It has a finally claus that
+     * saves all the current arraylists to the files after the program is finished running.
+     * @param vendingMachine This is the current VendingMachine object
+     */
     static void run(VendingMachine vendingMachine){
         machine = vendingMachine;
         try {
@@ -37,6 +43,10 @@ public class GUI extends Application {
         }
     }
 
+    /**
+     *
+     * @param primaryStage
+     */
     @Override
     public void start(Stage primaryStage){
         currentUser = new Operator("User", "0000", "000");
@@ -46,9 +56,10 @@ public class GUI extends Application {
     }
 
     /**
-     * The adminLogin() method makes and fills in a GridPane with a password field and an email
-     * field. It also contains a clear button that refreshes the menu and a submit button which
-     * validates the data. The pane also contains a button that leads to the createAccount() method.
+     * adminLogin() creates a menu with a text field, a password field and three buttons. One to clear the fields, one
+     * to return to previous screen and another to submit the inputted data for validation. If the test passes the
+     * method sets the currentUser variable to be the one logged in, else it will output a JOptionPane saying incorrect
+     * password/username.
      */
     private void adminLogin() {
         GridPane pane = window.getDefaultGridPane();
@@ -93,6 +104,13 @@ public class GUI extends Application {
         window.setPane(show);
     }
 
+    /**
+     * createAccount() makes a menu with a text field and two password fields. It also includes a VBox with three
+     * checkboxes to set the desired permissions for the created account. It has three buttons, one to go back to the
+     * previous menu, one to clear ll inputted data and another to submit the data for validation. I the test succeeds
+     * the new Operator will be added to the VendingMachine and a JOptionPane will display the inputted username,
+     * letting you know the creation was successful.
+     */
     private void createAccount() {
         GridPane pane = window.getDefaultGridPane();
         BorderPane show = new BorderPane();
@@ -168,7 +186,11 @@ public class GUI extends Application {
     }
 
     /**
-     *
+     * This method displays a menu that has access to all other menus, a home screen. It contains four buttons available
+     * to all users, login, to log into an account, show products, to display all products in the machine, insert coins,
+     * to put coins into the machine and finally buy product, to buy a product. The menu contains a toolbar at the top
+     * of the BorderPane that contains all the admin tools. This will not display until logged in as an operator and each
+     * tool will only be available to an operator who has the correct permissions.
      */
     private void showHome(){
         GridPane pane = window.getDefaultGridPane();
@@ -218,6 +240,11 @@ public class GUI extends Application {
         window.setPane(show);
     }
 
+    /**
+     * The chooseCoin() method displays a menu containing six buttons, each displaying a coin image that represents the
+     * desired input. It also has a count in the bottom right that displays the current value inside the machine. There
+     * is a back button in the bottom right that returns you to the home screen.
+     */
     private void chooseCoin(){
         GridPane pane = window.getDefaultGridPane();
 
@@ -391,7 +418,7 @@ public class GUI extends Application {
 
         return pane;
     }
-  
+
     private ToolBar getAdminToolbar(){
         ToolBar bar = new ToolBar();
 
