@@ -22,32 +22,32 @@ class LineItem {
      *
      * @return Product
      */
-	public Product getProduct() {
+	Product getProduct() {
 		return product;
 	}
 
     /**
      * Getter for retrieving quantity
-     * 
+     *
      * @return
      */
-	public int getQuantity() {
+	int getQuantity() {
 		return quantity;
 	}
 
     /**
      * Setter for setting quantity
-     * 
+     *
      * @param quantity Quantity of products
      */
-	public void setQuantity(int quantity) {
+	void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
 
     /**
      * Decrement quantity by 1 if quantity is greater than 0
      */
-	public void decrementQuantity() {
+	void decrementQuantity() {
 		if (quantity >= 1)
 			this.quantity--;
 	}
