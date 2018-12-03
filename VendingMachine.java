@@ -53,9 +53,9 @@ class VendingMachine {
 		ArrayList<LineItem> inStockProducts = getProductsInStock();
 		int outputArraySize = inStockProducts.size();
 		Product[] outputProducts = new Product[outputArraySize];
-		for (int i = 0; i < outputArraySize; i++) {
+		for (int i = 0; i < outputArraySize; i++)
 			outputProducts[i] = inStockProducts.get(i).getProduct();
-		}
+
 		return outputProducts;
 	}
 
@@ -118,7 +118,6 @@ class VendingMachine {
 	 */
 	double removeMoney() {
 		double amountRemoved = coins.getValue();
-		System.out.println(coins.getValue());
 		coins.clearCoinSet();
 		saveAllToFiles();
 		return amountRemoved;
@@ -190,7 +189,7 @@ class VendingMachine {
 
 	/**
 	 * Returns an arraylist of operators
-	 * 
+	 *
 	 * @return Operators Arraylist of Operators
 	 */
 	ArrayList<Operator> getOperators() {
@@ -200,7 +199,7 @@ class VendingMachine {
 	/**
 	 * Adds a new operator to the arraylist
 	 * then saves to file
-	 * 
+	 *
 	 * @param op Operator to add
 	 */
 	void addOperator(Operator op) {
@@ -211,7 +210,7 @@ class VendingMachine {
 	/**
 	 * Adds a new operator to the arraylist
 	 * then saves to file
-	 * 
+	 *
 	 * @param user Username
 	 * @param code Access code
 	 * @param permissions A string of bits to denote what permissions are enables
