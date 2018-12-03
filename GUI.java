@@ -217,10 +217,10 @@ public class GUI extends Application {
             if (create.isSelected()){
                 permission.setCharAt(0, '1');
             }
-            else if (add.isSelected()){
+            if (add.isSelected()){
                 permission.setCharAt(1, '1');
             }
-            else if(remove.isSelected()){
+            if(remove.isSelected()){
                 permission.setCharAt(2, '1');
             }
             Operator op = Validation.accountCheck(machine, emailField.getText(), passField.getText(), verify.getText(), permission.toString());

@@ -33,7 +33,7 @@ public class FileReading extends FileIO
 		}
 		catch(IOException e)
 		{
-				System.out.println("IOException in stock file\n" + e)
+			System.out.println("IOException in stock file\n" + e);
 		}
 		catch(Exception e)
 		{

@@ -43,7 +43,7 @@ public class FileWriting extends FileIO
 		{
 			System.out.println("IOException in stockToFile\n" + e);
 		}
-		catch(IOException e)
+		catch(Exception e)
 		{
 			System.out.println("Error in stockToFile\n" + e);
 		}
@@ -70,7 +70,7 @@ public class FileWriting extends FileIO
 		{
 			System.out.println("IOException in moneyToFile\n" + e);
 		}
-		catch(IOException e)
+		catch(Exception e)
 		{
 			System.out.println("Error in moneyToFile\n" + e);
 		}
@@ -94,9 +94,9 @@ public class FileWriting extends FileIO
 		}
 		catch(IOException e)
 		{
-				System.out.println("IOException in operatorsToFile\n" + e);
+			System.out.println("IOException in operatorsToFile\n" + e);
 		}
-		catch(IOException e)
+		catch(Exception e)
 		{
 			System.out.println("Error in operatorsToFile\n" + e);
 		}
