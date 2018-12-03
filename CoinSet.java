@@ -1,13 +1,15 @@
 import java.util.ArrayList;
 
 /**
- * A set of coins.
+ * A wrapper class for a set of coins.
+ * @author Daniel Dalton 17219477
  */
 class CoinSet {
 	private ArrayList<CoinLine> set;
 
 	/**
 	 * Constructs a CoinSet object.
+	 * Adds a default set of CoinLines with quantity 0
 	 * Initialises the ArrayList
 	 */
 	CoinSet() {
@@ -20,11 +22,10 @@ class CoinSet {
 		set.add(new CoinLine(2.00, "2 Euro", 0));
 	}
 
-
 	/**
 	 * Adds a single coin to the set of coins
 	 *
-	 * @param coin
+	 * @param coin the coin to be added
 	 */
 	void addCoin(Coin coin) {
 		boolean exists = false;
@@ -44,7 +45,7 @@ class CoinSet {
 	 * Adds a CoinLine to the set. Increments the given quantity if it already
 	 * exists in the set, adds a new CoinLine to the set if it doesn't
 	 *
-	 * @param coinLine
+	 * @param coinLine the CoinLine to be added
 	 */
 	void addCoin(CoinLine coinLine) {
 		boolean found = false;
@@ -60,9 +61,9 @@ class CoinSet {
 	}
 
 	/**
-	 * Returns the Coinset
+	 * Returns the Coinset as ArrayList
 	 *
-	 * @return Set of Coin Lines
+	 * @return Arraylist of CoinLines
 	 */
 	ArrayList<CoinLine> getSetOfCoins() {
 		return set;
@@ -70,9 +71,9 @@ class CoinSet {
   
 	/**
 	 * Adds one coinset to another by checking for coins in common and adding the
-	 * quantity of the coins in the passed in coinset to the quantity in the current coinset
+	 * quantity of the coins in the passed-in coinset to the quantity in the current coinset
 	 *
-	 * @param inputCoinLineList An ArrayList of CoinLine
+	 * @param inputCoinLineList An ArrayList of CoinLine to add
 	 */
 	void addSetOfCoins(ArrayList<CoinLine> inputCoinLineList) {
 		boolean found = false;
@@ -92,7 +93,7 @@ class CoinSet {
 	/**
 	 * Adds the value of all the coins in the set and returns the sum
 	 *
-	 * @return value
+	 * @return value of all coins
 	 */
 	double getValue() {
 		double value = 0;
@@ -103,12 +104,19 @@ class CoinSet {
 	}
 
 	/**
-	 * Clears the set of coins
+	 * Clears the set of coins by setting the quantity of all the coins to 0
 	 */
 	void clearCoinSet() {
-		set.clear();
+		for(CoinLine cl : set){
+			cl.clearCoinLine();
+		}
 	}
 
+	/**
+	 *
+	 *
+	 * @return
+	 */
 	ArrayList<Coin> getAcceptedCoins() {
 		ArrayList<Coin> acceptableCoins = new ArrayList<>();
 		for (CoinLine cl : set) {
@@ -130,3 +138,4 @@ class CoinSet {
 		return output;
 	}
 }
+
