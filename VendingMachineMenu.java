@@ -1,10 +1,8 @@
 import java.util.Scanner;
-
 /**
  * A menu from the vending machine.
  * @author Daniel Dalton 17219477
  */
-
 class VendingMachineMenu {
 	private Scanner in;
 	private Operator currentOperator;
@@ -12,7 +10,7 @@ class VendingMachineMenu {
 	/**
 	 * Constructs a VendingMachineMenu object
 	 */
-	public VendingMachineMenu() {
+	VendingMachineMenu() {
 		in = new Scanner(System.in);
 	}
 
@@ -21,7 +19,7 @@ class VendingMachineMenu {
 	 *
 	 * @param machine the vending machine
 	 */
-	public void run(VendingMachine machine) {
+	void run(VendingMachine machine) {
 		boolean more = true;
 		Coin[] coins = machine.getAcceptableCoins();
 		while (more) {
@@ -107,8 +105,7 @@ class VendingMachineMenu {
 					permissions += 1;
 				else
 					permissions += 0;
-
-				//in.nextLine(); // read the new-line character
+				
 				machine.addOperator(type, code, permissions);
 			} else if (command.equals("B")) {
 				more = false;
