@@ -30,7 +30,7 @@ public class Coin {
 	 *
 	 * @return value
 	 */
-	String getName() {
+    String getName() {
 		return name;
 	}
 
