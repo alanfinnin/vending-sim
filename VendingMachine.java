@@ -4,14 +4,13 @@ class VendingMachine {
 	private CoinSet coins; //the total machine balance of coins
 	private CoinSet currentCoins; //the user coins currently held in machine credit
     private ArrayList<LineItem> stock;
-    private ArrayList<Operator> operators;
 
     /**
      * Constructs the vending machine and initialises the list of stock
 	 * and the set of coins
      */
     VendingMachine(){
-        stock = new ArrayList<>();
+    stock = new ArrayList<>();
 		coins = new CoinSet();
 		operators = new ArrayList<>();
 		currentCoins = new CoinSet();
@@ -44,16 +43,13 @@ class VendingMachine {
      * product only once. 
      * @return String
      */
-	public String showProducts(){ //todo dont display out of stock product
+	public String showProducts(){ //todo Convert to lineItem and only show products in stock stock
 		Product[] productList = getProductTypes();
-		StringBuilder output = new StringBuilder();
-		for (Product p : productList) {
-            output.append(p.getDescription());
-            output.append(", \u20ac");
-            output.append(p.getPrice());
-            output.append("\n");
-        }
-		return output.toString();
+		String output = "";
+		for (Product p : productList)
+			output += p.getDescription() + ", \u20ac" + p.getPrice() + "\n";
+		
+		return output;
 	}
 	
     /**
@@ -61,14 +57,23 @@ class VendingMachine {
      * product only once.
      * @return Product[]
      */
-    public Product[] getProductTypes(){
-        ArrayList<LineItem> inStockProducts = getProductsInStock();
-        int outputArraySize = inStockProducts.size();
-        Product[] outputProducts = new Product[outputArraySize];
-        for(int i = 0; i < outputArraySize; i++){
-                outputProducts[i] = inStockProducts.get(i).getProduct();
+    public Product[] getProductTypes(){ //todo Convert to lineItem and only show products in stock stock
+        ArrayList<Product> distinctProducts = new ArrayList<>();
+        for(LineItem currentItem : stock){
+            if(!distinctProducts.contains(currentItem.getProduct())) {
+                distinctProducts.add(currentItem.getProduct());
+            }
         }
         return outputProducts;
+    }
+
+    public ArrayList<LineItem> getProductsInStock(){
+        ArrayList<LineItem> inStockProducts = new ArrayList<>();
+        for(LineItem li : stock){
+            if(li.getQuantity() > 0)
+                inStockProducts.add(li);
+        }
+        return inStockProducts;
     }
 
     public ArrayList<LineItem> getProductsInStock(){
@@ -116,24 +121,21 @@ class VendingMachine {
      * @throws VendingException Insufficient Credit
      * @return successful purchase
      */
-    public boolean buyProduct(Product p) throws VendingException{ //todo fix option to choose buying an out of  stock product
+
+    public void buyProduct(Product p) throws VendingException{ //todo fix option to choose buying an out of  stock product
 		double currentCredit = currentCoins.getValue();
-		boolean success = false;
-        for(LineItem item : stock){
-            int currentItemQuantity = item.getQuantity();
-            Product currentItemProduct = item.getProduct();
-            if(p.equals(currentItemProduct) && currentItemQuantity >= 1 && currentCredit >= p.getPrice()) {
-                item.decrementQuantity();
-                coins.addSetOfCoins(currentCoins.getSetOfCoins());
-                currentCoins.clearCoinSet();
-                success = true;
-            }else if(p.equals(currentItemProduct) && currentItemQuantity < 1){
-                throw new VendingException("Not enough stock");
-            }else if(p.equals(currentItemProduct) && currentCredit < p.getPrice()){
-                throw new VendingException("Insufficient credit");
-            }
-        }
-        return success;
+        if(currentCredit >= p.getPrice()) {
+			for(LineItem item : stock){
+				if(p.equals(item.getProduct()) && item.getQuantity() >= 1) {
+					item.decrementQuantity();
+					coins.addSetOfCoins(currentCoins.getSetOfCoins());
+					currentCoins.clearCoinSet();
+				}else {
+					throw new VendingException("Not enough stock"); //todo make it display this when attempting to buy out of stock products, now it doesn't for unknown reason?
+				}
+			}
+        }else
+            throw new VendingException("Insufficient credit");
     }
 
     /**

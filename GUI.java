@@ -16,7 +16,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-
 import javax.swing.*;
 import java.util.ArrayList;
 
@@ -33,8 +32,8 @@ public class GUI extends Application {
      * The run() method initializes the GUI methods
      */
     public static void run(VendingMachine m){
+        currentUser = new Operator("User", "0000", "000");
         machine = m;
-        currentUser = machine.getOperators().get(0);
         launch();
     }
 
@@ -435,7 +434,7 @@ public class GUI extends Application {
         Image gear = new Image(getClass().getResourceAsStream("images/gear.png"));
         Button admin = new Button("Logout", new ImageView(gear));
         admin.setOnAction(event -> {
-            currentUser = machine.getOperators().get(0);
+            currentUser = new Operator("User", "0000", "000");
             userMenu();
         });
 
