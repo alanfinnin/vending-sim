@@ -16,7 +16,15 @@ class Validation {
         return null;
     }
 
-    static boolean copyCheck(VendingMachine m, Operator operator) {
+    /**
+     * Checks for existing operators within the same machine
+     * with the same type/name
+     * 
+     * @param m Vending Machine
+     * @param operator Operator to compare
+     * @return comparison result
+     */
+    private static boolean copyCheck(VendingMachine m, Operator operator) {
         ArrayList<Operator> ops = m.getOperators();
         for (Operator op : ops) {
             if (op.getType().equals(operator.getType())) return false;
@@ -24,6 +32,17 @@ class Validation {
         return true;
     }
 
+    /**
+     * Takes in the credentials and validates them. 
+     * Returns an operator object if they are correct, returns null if they are incorrect
+     * 
+     * @param m Vending Machine
+     * @param name Operator Name
+     * @param pass Operator Password/Code
+     * @param verify Copy of Operator password
+     * @param perm Permissions as string
+     * @return Operator
+     */
     static Operator accountCheck(VendingMachine m, String name, String pass, String verify, String perm) {
         Operator op = new Operator(name, pass, perm);
 
