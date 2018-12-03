@@ -23,7 +23,7 @@ public class VendingMachineSimulation {
         if (choice == 1){
             menu.run(machine);
         } else if (choice == 2){
-            GUI.run();
+            GUI.run(machine);
         } else {
             System.out.println("Invalid input!");
             run();

@@ -1,5 +1,5 @@
 class VendingException extends RuntimeException {
-    VendingException(String message){
-        super(message);
-    }
+	VendingException(String message) {
+		super(message);
+	}
 }
