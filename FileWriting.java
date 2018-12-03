@@ -18,7 +18,7 @@ public class FileWriting extends FileIO
 	*	to be sent to operatorsToFile
 	*	@return void
 	*/
-	public void fromArrayListToFiles(ArrayList<LineItem> stock, CoinSet money, ArrayList<Operator> operators) throws IOException
+	public void fromArrayListToFiles(ArrayList<LineItem> stock, CoinSet money, ArrayList<Operator> operators) 
 	{
 		stockToFile(stock);
 		moneyToFile(money);
@@ -30,14 +30,21 @@ public class FileWriting extends FileIO
 	*	@param stock the stock arraylist, taken in to be saved
 	*	@return void
 	*/
-	public void stockToFile(ArrayList<LineItem> stock) throws IOException
+	public void stockToFile(ArrayList<LineItem> stock)
 	{
-		File stockFile = new File("Stock.txt");
-		FileWriter writer = new FileWriter(stockFile);
-		for(int i = 0; i < stock.size(); i++)
-			writer.write(stock.get(i).toString() + "\r\n");
-		writer.flush();
-		writer.close();
+		try
+		{
+			File stockFile = new File("Stock.txt");
+			FileWriter writer = new FileWriter(stockFile);
+			for(int i = 0; i < stock.size(); i++)
+				writer.write(stock.get(i).toString() + "\r\n");
+			writer.flush();
+			writer.close();
+		}
+		catch(IOException e)
+		{
+			System.out.println("Error in stockToFile\n" + e);
+		}
 	}
 	/**
 	*	Saves money from a coinSet
@@ -45,16 +52,23 @@ public class FileWriting extends FileIO
 	*	@param money the holder for the coins to be saved 
 	*	@return void
 	*/
-	public void moneyToFile(CoinSet money) throws IOException
+	public void moneyToFile(CoinSet money)
 	{
-		moneySet = new ArrayList<CoinLine>();
-		moneySet = money.getSetOfCoins();
-		File moneyFile = new File("Money.txt");
-		FileWriter writer = new FileWriter(moneyFile);
-		for(int i = 0; i < moneySet.size(); i++)
-			writer.write(moneySet.get(i).toString() + "\r\n");
-		writer.flush();
-		writer.close();
+		try
+		{
+			moneySet = new ArrayList<CoinLine>();
+			moneySet = money.getSetOfCoins();
+			File moneyFile = new File("Money.txt");
+			FileWriter writer = new FileWriter(moneyFile);
+			for(int i = 0; i < moneySet.size(); i++)
+				writer.write(moneySet.get(i).toString() + "\r\n");
+			writer.flush();
+			writer.close();
+		}
+		catch(IOException e)
+		{
+			System.out.println("Error in moneyToFile\n" + e);
+		}
 	}
 	/**
 	*	Saves the operators from an arraylist
@@ -63,13 +77,20 @@ public class FileWriting extends FileIO
 	*	@param operators the arraylist of operators to be saved
 	*	@return void 
 	*/
-	public void operatorsToFile(ArrayList<Operator> operators) throws IOException
+	public void operatorsToFile(ArrayList<Operator> operators) 
 	{
-		File operatorsFile = new File("Operators.txt");
-		FileWriter writer = new FileWriter(operatorsFile);
-		for(int i = 0; i < operators.size(); i++)
-			writer.write(operators.get(i).toString() + "\r\n");
-		writer.flush();
-		writer.close();
+		try
+		{
+			File operatorsFile = new File("Operators.txt");
+			FileWriter writer = new FileWriter(operatorsFile);
+			for(int i = 0; i < operators.size(); i++)
+				writer.write(operators.get(i).toString() + "\r\n");
+			writer.flush();
+			writer.close();
+		}
+		catch(IOException e)
+		{
+				System.out.println("Error in operatorsToFile\n" + e);
+		}
 	}
 }
