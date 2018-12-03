@@ -36,7 +36,7 @@ class VendingMachine {
 		StringBuilder output = new StringBuilder();
 		for (Product p : productList) {
 			output.append(p.getDescription());
-			output.append(", \u20ac");
+			output.append(", Euro ");
 			output.append(p.getPrice());
 			output.append("\n");
 		}
