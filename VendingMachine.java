@@ -91,7 +91,7 @@ class VendingMachine {
 	 *
 	 * @param insertedCoin the Coin object being inserted
 	 */
-	void addCoin(Coin insertedCoin) { //todo fix this with CLI, coins dont add after one purchase
+	void addCoin(Coin insertedCoin) {
 		currentCoins.addCoin(insertedCoin);
 	}
 
@@ -99,10 +99,14 @@ class VendingMachine {
 	 * @return
 	 */
 	String refundCoins() {
-		//todo make an implementation for change/refunding coins (Or don't, see if I care)
 		String refundedAmount = "No coins returned";
 		if (currentCoins.getValue() > 0) {
-			refundedAmount = currentCoins.toString();
+			refundedAmount = "";
+			ArrayList<CoinLine> tempCoinLines = currentCoins.getSetOfCoins();
+			for(CoinLine cl : tempCoinLines) {
+				if(cl.getQuantity() > 0)
+					refundedAmount += cl.getCoin().getName() + "\n";
+			}
 			currentCoins.clearCoinSet();
 		}
 		return refundedAmount;
