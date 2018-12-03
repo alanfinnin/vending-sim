@@ -3,24 +3,34 @@ class CoinLine {
 	private int quantity;
 
 	/**
-	 * Constructs a Money object.
+	 * Constructs a coin object.
 	 * Initialises the ArrayList
+	 * 
+	 * @param coin Coin
+	 * @param quantity Quantity of coins   
 	 */
-	public CoinLine(Coin coin, int quantity) {
+	CoinLine(Coin coin, int quantity) {
 		this.coin = coin;
 		this.quantity = quantity;
 	}
 
-	public CoinLine(double value, String description, int quantity)
-	{
+	/**
+	 * Constructs a coin object.
+	 * Initialises the ArrayList
+	 * 
+	 * @param value Value of coin
+	 * @param description Description of coin
+	 * @param quantity Quantity of coins
+	 */
+	CoinLine(double value, String description, int quantity) {
 		this.coin = new Coin(value, description);
 		this.quantity = quantity;
 	}
 
 	/**
-	 * Adds a coin to the set of coins
+	 * Increases the quantity by passed-in quantity
 	 */
-	public void addQuantity(int quantity) {
+	void addQuantity(int quantity) {
 		this.quantity += quantity;
 	}
 
@@ -29,29 +39,42 @@ class CoinLine {
 	 *
 	 * @return value
 	 */
-	public double getTotalValue() {
+	double getTotalValue() {
 		return (coin.getValue() * this.quantity);
 	}
 
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
-
-	public int getQuantity() {
+	/**
+	 * Getter to retrieve quantity from coinLine
+	 * 
+	 * @return Quantity
+	 */
+	int getQuantity() {
 		return this.quantity;
 	}
 
-	public Coin getCoin() {
+	/**
+	 * Getter to retrieve coin from coinLine
+	 * 
+	 * @return Coin
+	 */
+	Coin getCoin() {
 		return this.coin;
 	}
 
 	/**
-	 * Clears the set of coins
+	 * Clears the coinLine by setting the value to 0
 	 */
-	public void clearCoinLine() {
+	void clearCoinLine() {
 		this.quantity = 0;
 	}
 
+	/**
+	 * Checks whether a CoinLine is equals by checking whether the coin within are equal
+	 * Overrides the built in equals
+	 *
+	 * @param o object to check against this
+	 * @return boolean of whether its equal
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof CoinLine) {
@@ -61,6 +84,12 @@ class CoinLine {
 			return false;
 	}
 
+	/**
+	 * Overrides the default toString for product
+	 * returns the name of the product
+	 *
+	 * @return name,value,quantity 
+	 */
 	@Override
 	public String toString() {
 		return coin.toString() + "," + this.quantity;
