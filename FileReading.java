@@ -1,5 +1,8 @@
 import java.util.*;
 import java.io.*;
+	/**
+	* @author Alan Finnin
+	*/
 public class FileReading extends FileIO
 {	
 	private String line;
@@ -10,16 +13,16 @@ public class FileReading extends FileIO
 	*	then puts them in an arraylist for 
 	*	@return readFromStockFile
 	*/
-	public ArrayList readFromStockFile() throws IOException
+	public ArrayList<LineItem> readFromStockFile()
 	{
 		double price;
 		String description;
 		int quantity;
 		ArrayList<LineItem> products = new ArrayList<LineItem>();
 		File stockFile = new File("Stock.txt");
-		Scanner in = new Scanner(stockFile);
 		try
 		{
+			Scanner in = new Scanner(stockFile);
 			while(in.hasNextLine())
 			{
 				lines = in.nextLine().split(",");
@@ -40,7 +43,7 @@ public class FileReading extends FileIO
 	*	it in a coinSet to be returned
 	*	@return readFromMoneyFile
 	*/
-	public CoinSet readFromMoneyFile() throws IOException
+	public CoinSet readFromMoneyFile()
 	{
 		defaultSet.add(new CoinLine(0.05, "5 Cent", 0));
 		defaultSet.add(new CoinLine(0.10, "10 Cent", 0));
@@ -56,9 +59,9 @@ public class FileReading extends FileIO
 		ArrayList<CoinLine> coinSetArrayList = coinSetList.getSetOfCoins();
 		CoinSet set = new CoinSet();
 		File moneyFile = new File("Money.txt");
-		Scanner in = new Scanner(moneyFile);
 		try
 		{
+			Scanner in = new Scanner(moneyFile);
 			while(in.hasNextLine())
 			{
 				lines = in.nextLine().split(",");
@@ -86,14 +89,14 @@ public class FileReading extends FileIO
 	*	puts them in an arraylist then returns it
 	*	@return readFromOperatorsFile
 	*/
-	public ArrayList readFromOperatorsFile() throws IOException
+	public ArrayList<Operator> readFromOperatorsFile()
 	{		
 		String type, code, permissions;
 		ArrayList<Operator> operators = new ArrayList<Operator>();
 		File operatorsFile = new File("Operators.txt");
-		Scanner in = new Scanner(operatorsFile);
 		try
 		{
+			Scanner in = new Scanner(operatorsFile);
 			while(in.hasNextLine())
 			{
 				lines = in.nextLine().split(",");
