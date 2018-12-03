@@ -1,79 +1,51 @@
 /**
- * A wrapper for coin to include quantities
+ * Product object class that stores price and description
  * @author Daniel Dalton 17219477
  */
-class CoinLine {
-	private Coin coin;
-	private int quantity;
+public class Product {
+	private double price;
+	private String description;
 
 	/**
-	 * Constructs a coin object.
-	 * Initialises the ArrayList
-	 * 
-	 * @param coin Coin
-	 * @param quantity Quantity of coins
-	 */
-	CoinLine(Coin coin, int quantity) {
-		this.coin = coin;
-		this.quantity = quantity;
-	}
-
-	/**
-	 * Constructs a coin object.
-	 * Initialises the ArrayList
+	 * Constructor for product object
 	 *
-	 * @param value Value of coin
-	 * @param description Description of coin
-	 * @param quantity Quantity of coins
+	 * @param description Description of product (Name)
+	 * @param price Selling price
 	 */
-	CoinLine(double value, String description, int quantity) {
-		this.coin = new Coin(value, description);
-		this.quantity = quantity;
+	Product(String description, double price) {
+		this.description = description;
+		this.price = price;
 	}
 
 	/**
-	 * Increases the quantity by passed-in quantity
-	 */
-	void addQuantity(int quantity) {
-		this.quantity += quantity;
-	}
-
-	/**
-	 * Adds the value of all the coins in the set and returns the sum
+	 * Getter to retrieve description of product
 	 *
-	 * @return value
+	 * @return Description
 	 */
-	double getTotalValue() {
-		return (coin.getValue() * this.quantity);
+	String getDescription() {
+		return description;
 	}
 
 	/**
-	 * Getter to retrieve quantity from coinLine
+	 * Getter to retrieve price of product
 	 *
-	 * @return Quantity
+	 * @return Selling price
 	 */
-	int getQuantity() {
-		return this.quantity;
+	double getPrice() {
+		return price;
 	}
 
 	/**
-	 * Getter to retrieve coin from coinLine
+	 * Setter for price of product
 	 *
-	 * @return Coin
+	 * @param price selling price
 	 */
-	Coin getCoin() {
-		return this.coin;
+	void setPrice(double price) {
+		this.price = price;
 	}
 
 	/**
-	 * Clears the coinLine by setting the value to 0
-	 */
-	void clearCoinLine() {
-		this.quantity = 0;
-	}
-
-	/**
-	 * Checks whether a CoinLine is equals by checking whether the coin within are equal
+	 * Checks whether a product is equals by checking whether the descriptions are equal
 	 * Overrides the built in equals
 	 *
 	 * @param o object to check against this
@@ -81,9 +53,9 @@ class CoinLine {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof CoinLine) {
-			CoinLine clObj = (CoinLine) o;
-			return coin.equals(clObj.getCoin());
+		if (o instanceof Product) {
+			Product prodObj = (Product) o;
+			return this.description.equals(prodObj.getDescription());
 		} else
 			return false;
 	}
@@ -92,10 +64,9 @@ class CoinLine {
 	 * Overrides the default toString for product
 	 * returns the name of the product
 	 *
-	 * @return name,value,quantity
+	 * @return description,price
 	 */
-	@Override
 	public String toString() {
-		return coin.toString() + "," + this.quantity;
+		return description + "," + price;
 	}
 }
