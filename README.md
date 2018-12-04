@@ -1,6 +1,6 @@
 Readme
 -   Downloading zip file, extract all to one folder.
--   Run "javac *.java" in cammans line making sure to be in
+-   Run "javac *.java" in command line making sure to be in
     the same directory is as files in question.
 -   Type "java VendingMachineSimulation" into the cmd window.
 
