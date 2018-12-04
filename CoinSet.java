@@ -27,6 +27,7 @@ class CoinSet {
 	 *
 	 * @param coin the coin to be added
 	 */
+
 	void addCoin(Coin coin) {
 		boolean exists = false;
 		for (CoinLine cl : set) {
@@ -39,8 +40,7 @@ class CoinSet {
 		if(!exists){
 			addCoin(new CoinLine(coin, 1));
 		}
-	}
-
+}
 	/**
 	 * Adds a CoinLine to the set. Increments the given quantity if it already
 	 * exists in the set, adds a new CoinLine to the set if it doesn't

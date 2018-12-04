@@ -31,7 +31,7 @@ public class GUI extends Application {
 
     /**
      * The run() method declares the VendingMachine object and launches the JavaFX menu. It has a finally claus that
-     * saves all the current array lists to the files after the program is finished running.
+     * saves all the current arraylists to the files after the program is finished running.
      * @param vendingMachine This is the current VendingMachine object
      */
     static void run(VendingMachine vendingMachine){
@@ -51,7 +51,6 @@ public class GUI extends Application {
     public void start(Stage primaryStage){
         currentUser = new Operator("User", "0000", "000");
         window = new Window(primaryStage);
-        window.centerWindow();
         showHome();
     }
 
