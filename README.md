@@ -1,25 +1,14 @@
-Files:
-    - Driver.java
-    - GUI.java
-    - CLI.java
-    - Methods.java
-    - LoadFile.java
-    - SaveFile.java
-    - Stock.txt
-    - Money.txt
-    - Admin.txt
+Readme
+-   Downloading zip file, extract all to one folder.
+-   Run "javac *.java" in cammans line making sure to be in
+    the same directory is as files in question.
+-   Type "java VendingMachineSimulation" into the cmd window.
 
-Methods.java:               CLI.java/GUI.java:              Driver.java:
-    - buyProduct()              - accountChoice()               - methods.load()
-    - insertCoin()              - login()                       - GUI/CLI.run()
-    - showProducts()            - userMenu()                    - methods.save()
-    - addProduct()              - adminMenu()                   - exit()
-    - removeMoney()
-    - createAccount()       
-    - load()
-    - save()
-
-The driver would contain the main method which chooses whether the user would like a CLI or a GUI and runs the choesen menu. All
-needed methods would be contained inside the methods file for easy access by either of the menu classes. The driver class would
-also load the Stock, Money and Admin csv files into three different global ArrayLists that can be accessed from anywhere. After 
-the menus are finished the program would clear these files and save all the data from the ArrayLists to the file, beofre exiting.
+Warning --
+    If images are missing, GUI will not run.
+    Only CLI is available.
+    
+On starting, you are prompted to choose what form of UI you want
+1) CLI
+2) GUI
+- Input the number corresponding to the input you want and enjoy . . .

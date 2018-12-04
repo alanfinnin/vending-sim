@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 /**
  * This class file contains all the code for the JavaFX menus.
- * @author Stephen Cliffe
+ * @author Stephen Cliffe 17237157
  */
 @SuppressWarnings("unchecked")
 public class GUI extends Application {
@@ -216,10 +216,10 @@ public class GUI extends Application {
             if (create.isSelected()){
                 permission.setCharAt(0, '1');
             }
-            else if (add.isSelected()){
+            if (add.isSelected()){
                 permission.setCharAt(1, '1');
             }
-            else if(remove.isSelected()){
+            if(remove.isSelected()){
                 permission.setCharAt(2, '1');
             }
             Operator op = Validation.accountCheck(machine, emailField.getText(), passField.getText(), verify.getText(), permission.toString());
@@ -308,7 +308,11 @@ public class GUI extends Application {
     }
 
     /**
-     * The showProducts() method
+     * The showProducts() method creates a BorderPane which includes a TableView with 3 columns representing the name,
+     * price and quantity of the product. This table is sortable. The BorderPane also includes a GridPane at the bottom,
+     * which has a return button to bring you to the home screen. The GridPane contains the current money in the machine
+     * on the bottom right. The menu also contains options for buying, which adds a buy button and adding products which
+     * calls for a GridPane which includes add products methods.
      */
     private void showProducts(){
         GridPane pane;
@@ -386,6 +390,12 @@ public class GUI extends Application {
         window.setPane(show);
     }
 
+    /**
+     * This method returns a GridPane that includes the text fields necessary for adding a product, including price,
+     * name and quantity. It has a clear button to reset the fields, a submit button to add a product and a back button
+     * to return home.
+     * @return GridPane including 3 Text Fields and 3 Buttons
+     */
     private GridPane getAddGrid(){
         GridPane pane = window.getDefaultGridPane();
         Label text1 = new Label("Description");
@@ -435,6 +445,11 @@ public class GUI extends Application {
         return pane;
     }
 
+    /**
+     * This method returns a ToolBar which contains operator buttons. It checks the permissions available to the current
+     * user and greys out and disables the buttons the user doesn't have permission for.
+     * @return ToolBar including addProduct, removeCoins & createAccount
+     */
     private ToolBar getAdminToolbar(){
         ToolBar bar = new ToolBar();
 

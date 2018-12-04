@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -8,16 +7,15 @@ class VendingMachine {
 	private CoinSet coins; //the total machine balance of coins
 	private CoinSet currentCoins; //the user coins currently held in machine credit
 	private ArrayList<LineItem> stock;
-	private Operator currentOperator;
 	private ArrayList<Operator> operators;
 	private FileWriting fileOutput;
 	private FileReading fileInput;
 
 	/**
 	 * Constructs the vending machine and initialises the list of stock
-	 * and the set of coins
+	 * and the set of coins. Populates arraylists from files
 	 */
-	VendingMachine() throws IOException {
+	VendingMachine()  {
 		FileIO.fileCheck();
 		fileInput = new FileReading();
 		fileOutput = new FileWriting();
@@ -25,7 +23,6 @@ class VendingMachine {
 		coins = fileInput.readFromMoneyFile();
 		operators = fileInput.readFromOperatorsFile();
 		currentCoins = new CoinSet();
-		initialiseOperators();
 	}
 
 	/**
@@ -39,7 +36,7 @@ class VendingMachine {
 		StringBuilder output = new StringBuilder();
 		for (Product p : productList) {
 			output.append(p.getDescription());
-			output.append(", \u20ac");
+			output.append(", Euro ");
 			output.append(p.getPrice());
 			output.append("\n");
 		}
@@ -56,9 +53,9 @@ class VendingMachine {
 		ArrayList<LineItem> inStockProducts = getProductsInStock();
 		int outputArraySize = inStockProducts.size();
 		Product[] outputProducts = new Product[outputArraySize];
-		for (int i = 0; i < outputArraySize; i++) {
+		for (int i = 0; i < outputArraySize; i++)
 			outputProducts[i] = inStockProducts.get(i).getProduct();
-		}
+
 		return outputProducts;
 	}
 
@@ -91,18 +88,24 @@ class VendingMachine {
 	 *
 	 * @param insertedCoin the Coin object being inserted
 	 */
-	void addCoin(Coin insertedCoin) { //todo fix this with CLI, coins dont add after one purchase
+	void addCoin(Coin insertedCoin) {
 		currentCoins.addCoin(insertedCoin);
 	}
 
 	/**
-	 * @return
+	 * Allows a user to refund coins that have been input. Clears credit
+	 *
+	 * @return refundedAmount A String that contains all the refunded coin names and quantity
 	 */
 	String refundCoins() {
-		//todo make an implementation for change/refunding coins (Or don't, see if I care)
 		String refundedAmount = "No coins returned";
 		if (currentCoins.getValue() > 0) {
-			refundedAmount = currentCoins.toString();
+			refundedAmount = "";
+			ArrayList<CoinLine> tempCoinLines = currentCoins.getSetOfCoins();
+			for(CoinLine cl : tempCoinLines) {
+				if(cl.getQuantity() > 0)
+					refundedAmount += cl.getCoin().getName() + " x " + cl.getQuantity() + "\n";
+			}
 			currentCoins.clearCoinSet();
 		}
 		return refundedAmount;
@@ -114,15 +117,10 @@ class VendingMachine {
 	 * @return Amount Removed
 	 */
 	double removeMoney() {
-		System.out.println("remove money" + currentOperator.canRemove());
-		if (currentOperator.canRemove()) {
-			double amountRemoved = coins.getValue();
-			System.out.println(coins.getValue());
-			coins.clearCoinSet();
-			saveAllToFiles();
-			return amountRemoved;
-		}
-		return 0;
+		double amountRemoved = coins.getValue();
+		coins.clearCoinSet();
+		saveAllToFiles();
+		return amountRemoved;
 	}
 
 	/**
@@ -142,6 +140,7 @@ class VendingMachine {
 	 * @param p Product to buy
 	 * @return successful purchase
 	 * @throws VendingException Insufficient Credit
+	 * @throws VendingException Insufficient Stock
 	 */
 	boolean buyProduct(Product p) throws VendingException {
 		double currentCredit = currentCoins.getValue();
@@ -181,7 +180,6 @@ class VendingMachine {
 				break;
 			}
 		}
-		//Note to self: this is outside the foreach loop to prevent concurrent exception thingys
 		if (!found) {
 			LineItem item = new LineItem(newProduct, quantity);
 			stock.add(item);
@@ -189,34 +187,44 @@ class VendingMachine {
 		saveAllToFiles();
 	}
 
-	void addProduct(String description, double price, int quantity) {
-		addProduct(new Product(description, price), quantity);
-	}
-
+	/**
+	 * Returns an arraylist of operators
+	 *
+	 * @return Operators Arraylist of Operators
+	 */
 	ArrayList<Operator> getOperators() {
 		return operators;
 	}
 
-	private void initialiseOperators() {
-		currentOperator = operators.get(0);
-	}
-
+	/**
+	 * Adds a new operator to the arraylist
+	 * then saves to file
+	 *
+	 * @param op Operator to add
+	 */
 	void addOperator(Operator op) {
 		operators.add(op);
 		saveAllToFiles();
 	}
 
-	void addOperator(String type, String code, String permissions) {
-		Operator newOp = new Operator(type, code, permissions);
+	/**
+	 * Adds a new operator to the arraylist
+	 * then saves to file
+	 *
+	 * @param user Username
+	 * @param code Access code
+	 * @param permissions A string of bits to denote what permissions are enables
+	 */
+	void addOperator(String user, String code, String permissions) {
+		Operator newOp = new Operator(user, code, permissions);
 		operators.add(newOp);
 		saveAllToFiles();
 	}
 
+	/**
+	 * Saves all the contents of the arraylists to files
+	 */
 	void saveAllToFiles() {
-		try { //move the try catch to alans stuff
-			fileOutput.fromArrayListToFiles(stock, coins, operators);
-		} catch (IOException iox) {
-			System.out.println("Failed to save files, Reason:\n" + iox.toString());
-		}
+		fileOutput.fromArrayListToFiles(stock, coins, operators);
 	}
 }
